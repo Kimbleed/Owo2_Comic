@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/settingLinear"
+            style="@style/MoreSelectIn_MMW">
+            <ImageView
+                android:background="@drawable/more_select_setting"
+                style="@style/MoreSelectImgStyle"  />
+            <TextView
+                android:text="选项"
+                style="@style/MoreSelectFontStyle"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/changeLinear"
+            style="@style/MoreSelectIn_MMW">
+            <ImageView
+                style="@style/MoreSelectImgStyle" />
+            <TextView
+                android:text="左手模式"
+                style="@style/MoreSelectFontStyle" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/saveLinear"
+            style="@style/MoreSelectIn_MMW">
+            <ImageView
+                style="@style/MoreSelectImgStyle" />
+            <TextView
+                android:text="保存"
+                style="@style/MoreSelectFontStyle" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/musicLinear"
+            style="@style/MoreSelectIn_MMW">
+            <ImageView
+                style="@style/MoreSelectImgStyle" />
+            <TextView
+                android:text="音乐"
+               style="@style/MoreSelectFontStyle" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
