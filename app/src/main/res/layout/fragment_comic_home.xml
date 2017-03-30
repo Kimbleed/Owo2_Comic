@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="com.example.awesoman.owo2_comic.module.ComicLocal.ComicLocalFragment">
+    tools:context="com.example.awesoman.owo2_comic.ui.ComicLocal.ComicLocalFragment">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/comic_type_rv_height"
         android:background="@color/gray">
 
-        <com.example.awesoman.owo2_comic.CircleBorderView
+        <com.example.awesoman.owo2_comic.view.CircleBorderView
             android:id="@+id/cbv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

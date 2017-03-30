@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.awesoman.owo2_comic.module.BActivity">
+    tools:context="com.example.awesoman.owo2_comic.ui.BActivity">
     <TextView
         android:text="123"
         android:layout_width="wrap_content"

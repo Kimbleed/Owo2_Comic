@@ -22,7 +22,7 @@
                 android:id="@+id/musicCh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <com.example.awesoman.owo2_comic.DragProgressBar
+            <com.example.awesoman.owo2_comic.view.DragProgressBar
                 android:id="@+id/dragProgressBar"
                 android:layout_weight="1"
                 android:layout_width="match_parent"

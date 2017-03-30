@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.example.awesoman.owo2_comic.module.MainViewPager
+    <com.example.awesoman.owo2_comic.view.MainViewPager
         android:id="@+id/myViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"></com.example.awesoman.owo2_comic.module.MainViewPager>
+        android:layout_weight="1"></com.example.awesoman.owo2_comic.view.MainViewPager>
 
     <LinearLayout
         android:layout_width="match_parent"

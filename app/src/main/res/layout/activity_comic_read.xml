@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
-    <com.example.awesoman.owo2_comic.module.MyViewPager
+    <com.example.awesoman.owo2_comic.view.ReadComicViewPager
         android:id="@+id/vp_read"
         android:layout_marginTop="@dimen/read_margin_top"
         android:layout_marginBottom="@dimen/read_margin_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        ></com.example.awesoman.owo2_comic.module.MyViewPager>
+        ></com.example.awesoman.owo2_comic.view.ReadComicViewPager>
 
     <RelativeLayout
         android:layout_width="match_parent"
