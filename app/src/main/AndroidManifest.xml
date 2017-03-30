@@ -25,10 +25,7 @@
         <service android:name=".module.Music.MusicService" />
 
         <activity android:name=".module.Music.MusicActivity" />
-        <activity android:name=".module.AActivity">
 
-        </activity>
-        <activity android:name=".module.BActivity"></activity>
     </application>
 
 </manifest>
