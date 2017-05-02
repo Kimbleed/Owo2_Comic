@@ -26,6 +26,9 @@
 
         <activity android:name=".ui.Music.MusicActivity" />
 
+        <activity android:name=".ui.ComicLocal.ChooseChapterActivity"/>
+
+        <activity android:name=".ui.ComicLocal.ChooseSurfaceActivity"/>
     </application>
 
 </manifest>

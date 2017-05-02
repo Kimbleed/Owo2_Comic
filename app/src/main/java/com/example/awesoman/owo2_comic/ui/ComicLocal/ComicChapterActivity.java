@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.bean.ComicBean;
@@ -28,11 +29,11 @@ public class ComicChapterActivity extends BaseActivity
         implements ComicChapterAdapter.Listener, View.OnClickListener{
 
     @Bind(R.id.chapter_container)
-    RecyclerView chapter_container;
+    RecyclerView chapterContainer;
     @Bind(R.id.iv_comic_face)
-    ImageView iv_comic_face;
+    ImageView comicSurfaceIV;
     @Bind(R.id.tv_comic_name)
-    TextView tv_comic_name;
+    TextView comicNameTxt;
     @Bind(R.id.backBtn)
     ImageView backBtn;
     @Bind(R.id.titleTxt)
@@ -48,11 +49,12 @@ public class ComicChapterActivity extends BaseActivity
         comicBean =(ComicBean) getIntent().getSerializableExtra("comicBean");
         //实例化ComicDBManager
         comicDBManager =FileManager.getInstance();
-        tv_comic_name.setText(comicBean.getComicName());
+        comicNameTxt.setText(comicBean.getComicName());
 
         Bitmap bitmap =comicDBManager.getSurface(comicBean.getComicPath());
-        iv_comic_face.setImageBitmap(comicDBManager.makeSurface(bitmap,getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
+        comicSurfaceIV.setImageBitmap(comicDBManager.makeSurface(bitmap,getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
 
+        comicSurfaceIV.setOnClickListener(this);
         backBtn.setOnClickListener(this);
         titleTxt.setText(comicBean.getComicName());
         titleTxt.setTextColor(getResources().getColor(R.color.white));
@@ -71,8 +73,8 @@ public class ComicChapterActivity extends BaseActivity
             @Override
             protected void onPostExecute(Object o) {
                 RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ComicChapterActivity.this,3);
-                chapter_container.setLayoutManager(layoutManager);
-                chapter_container.setAdapter(adapter);
+                chapterContainer.setLayoutManager(layoutManager);
+                chapterContainer.setAdapter(adapter);
             }
         }.execute();
     }
@@ -102,6 +104,12 @@ public class ComicChapterActivity extends BaseActivity
         switch(id){
             case R.id.backBtn:
                 finish();
+                break;
+            case R.id.iv_comic_face:
+                Intent intent = new Intent();
+                intent.setClass(this,ChooseChapterActivity.class);
+                intent.putExtra("comicBean",comicBean);
+                SkipUtil.skip(this, intent,false);
                 break;
         }
     }
