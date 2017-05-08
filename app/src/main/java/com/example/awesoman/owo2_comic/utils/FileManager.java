@@ -16,6 +16,7 @@ import com.example.awesoman.owo2_comic.sqlite.MySQLiteHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,20 +46,20 @@ public class FileManager {
      * return List<String>
      */
     public ArrayList<String> getNameListFromFile(String path){
+        ArrayList<String> fileInRes =new ArrayList<>();
+        File resDir =new File(path);
+        if(!resDir.exists()){
+            resDir.mkdir();
+        }
+        String[] arr = resDir.list();
         int length = 0;
-        ArrayList<String> comicsInFile =new ArrayList<>();
-        File comicsDir =new File(path);
-        if(!comicsDir.exists()){
-            comicsDir.mkdir();
-        }
-        File[] comicsArr = comicsDir.listFiles();
-        if(comicsArr!=null)
-            length = comicsArr.length;
+        if(arr!=null)
+            length = arr.length;
         for(int i = 0;i<length;i++){
-            comicsInFile.add(comicsArr[i].getName());
-            LogUtil.i("cenjunhui",comicsArr[i].getName());
+            fileInRes.add(arr[i]);
+            LogUtil.i("getNameListFromFile",i+"|"+arr[i]);
         }
-        return comicsInFile;
+        return fileInRes;
     }
 
     /**
@@ -108,8 +109,8 @@ public class FileManager {
      */
     public List<String> getComicNameListUnExist(){
         List<String> listFromDB = getComicNameListFromDB();
-        List<String> listInFile = getNameListFromFile(ComicEntry.COMIC_PATH);
-        List<String> listUnExist = getNameListFromFile(ComicEntry.COMIC_PATH);
+        List<String> listInFile = getNameListFromFile(ComicEntry.getComicPath());
+        List<String> listUnExist = getNameListFromFile(ComicEntry.getComicPath());
         for(String comicNameDB:listFromDB){
             for(String comicNameFile:listInFile){
                 if(comicNameDB.equals(comicNameFile)){
@@ -156,7 +157,7 @@ public class FileManager {
                 //漫画名colum
                 contentValues.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME, data.get(i));
                 //漫画所在路径colum
-                contentValues.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH,ComicEntry.COMIC_PATH + File.separator + data.get(i));
+                contentValues.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH,ComicEntry.getComicPath() + File.separator + data.get(i));
                 //漫画种类 colum  默认1
                 contentValues.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE, "1");
                 Log.i("contentValues", contentValues.toString());

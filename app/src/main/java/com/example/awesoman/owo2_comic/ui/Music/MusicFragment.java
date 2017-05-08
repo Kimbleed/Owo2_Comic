@@ -95,8 +95,9 @@ public class MusicFragment extends Fragment implements MusicAdapter.IMusicItem,V
         View view = inflater.inflate(R.layout.fragment_music,null);
         ButterKnife.bind(this,view);
 
+        //获取音乐资源list
         fileManager = FileManager.getInstance();
-        musicList = fileManager.getNameListFromFile(ComicEntry.MUSIC_PATH);
+        musicList = fileManager.getNameListFromFile(ComicEntry.getMusicPath());
         adapter = new MusicAdapter(getContext());
         adapter.setData(musicList);
         adapter.setListener(this);

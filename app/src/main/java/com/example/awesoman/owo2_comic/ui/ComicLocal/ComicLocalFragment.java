@@ -163,7 +163,7 @@ public class ComicLocalFragment extends Fragment
         if(fileManager.scanFile()) {
             comicNameList = fileManager.getComicNameListFromDB();
             if (comicNameList == null || comicNameList.size() <= 0) {
-                comicNameList = fileManager.getNameListFromFile(ComicEntry.COMIC_PATH);
+                comicNameList = fileManager.getNameListFromFile(ComicEntry.getComicPath());
                 for (int i = 0; i < comicNameList.size(); i++) {
                     LogUtil.i("comicList_" + i, comicNameList.get(i));
                 }

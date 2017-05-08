@@ -1,5 +1,6 @@
 package com.example.awesoman.owo2_comic.sqlite;
 
+import android.os.Environment;
 import android.provider.BaseColumns;
 
 import java.io.File;
@@ -9,11 +10,36 @@ import java.io.File;
  */
 
 public class ComicEntry implements BaseColumns {
-    public static final String PROJECT_PATH ="/data/data/com.example.awesoman.owo2_comic";
+    public static final String PROJECT_PATH ="Owo2_Comic";
     public static final String DATABASE_PATH = PROJECT_PATH+ File.separator+"databases";
     public static final String DATABASE_NAME = "owe2comic.db";
-    public static final String COMIC_PATH = PROJECT_PATH+File.separator+"files"+File.separator +"ComicAll";
-    public static final String MUSIC_PATH = PROJECT_PATH+File.separator+"files"+File.separator +"MusicAll";
+//    public static final String COMIC_PATH = PROJECT_PATH+File.separator+"files"+File.separator +"ComicAll";
+//    public static final String MUSIC_PATH = PROJECT_PATH+File.separator+"files"+File.separator +"MusicAll";
+    public static final String COMIC_PATH = "ComicRes";
+    public static final String MUSIC_PATH = "MusicRes";
+
+
+    /**
+     * 获取根目录
+     */
+    public static String getProjectPath(){
+        return Environment.getExternalStorageDirectory()+File.separator+PROJECT_PATH;
+    }
+
+    /**
+     * 获取漫画资源文件夹路径
+     * @return
+     */
+    public static String getComicPath(){
+        return Environment.getExternalStorageDirectory()+File.separator+PROJECT_PATH+File.separator+COMIC_PATH;
+    }
+
+    /**
+     * 获取音乐资源文件夹路径
+     */
+    public static String getMusicPath(){
+        return Environment.getExternalStorageDirectory()+File.separator+PROJECT_PATH+File.separator+MUSIC_PATH;
+    }
 
     //ComicAll表名
     public static final String COMIC_ALL_TABLE_NAME = "ComicInMain";

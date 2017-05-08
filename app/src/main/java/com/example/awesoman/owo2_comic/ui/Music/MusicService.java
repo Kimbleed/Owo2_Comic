@@ -1,8 +1,10 @@
 package com.example.awesoman.owo2_comic.ui.Music;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -35,9 +37,8 @@ public class MusicService extends Service {
 
     private int playMode = 0;
 
-
-
     private int startIndex = -1;
+    public static String BROADCAST_ACTION = "MusicServiceController";
 
 
     @Nullable
@@ -52,7 +53,15 @@ public class MusicService extends Service {
         super.onCreate();
         binder = new PlayerBinder();
         mediaPlayer = new MediaPlayer();
+        IntentFilter intentFilter = new IntentFilter(getPackageName()+BROADCAST_ACTION);
+        registerReceiver(serviceController,intentFilter);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(serviceController);
     }
 
     public class PlayerBinder extends Binder {
@@ -107,7 +116,7 @@ public class MusicService extends Service {
             if (!isPause) {
                 mediaPlayer.reset();
                 try {
-                    mediaPlayer.setDataSource(ComicEntry.MUSIC_PATH + File.separator + data.get(index));
+                    mediaPlayer.setDataSource(ComicEntry.getMusicPath() + File.separator + data.get(index));
                     mediaPlayer.prepare();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -132,7 +141,7 @@ public class MusicService extends Service {
             try {
                 if(currentTime <=0) {
                     mediaPlayer.reset();
-                    mediaPlayer.setDataSource(ComicEntry.MUSIC_PATH + File.separator + data.get(currentIndex));
+                    mediaPlayer.setDataSource(ComicEntry.getMusicPath() + File.separator + data.get(currentIndex));
                     mediaPlayer.prepare();
                 }
             }
@@ -191,7 +200,7 @@ public class MusicService extends Service {
             try {
                 mediaPlayer.reset();
                 currentTime = 0;
-                mediaPlayer.setDataSource(ComicEntry.MUSIC_PATH + File.separator + data.get(currentIndex));
+                mediaPlayer.setDataSource(ComicEntry.getMusicPath() + File.separator + data.get(currentIndex));
                 mediaPlayer.prepare();
                 if (!isPause) {
                     mediaPlayer.start();
@@ -304,7 +313,6 @@ public class MusicService extends Service {
             }
         }
 
-
         public int getCurrentTime(){
             return currentTime;
         }
@@ -312,4 +320,26 @@ public class MusicService extends Service {
             currentTime = time;
         }
     }
+
+    private BroadcastReceiver serviceController=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String method=intent.getStringExtra("method");
+            switch (method){
+                case "continue":
+                    binder.playForMode(2);
+                    break;
+                case "pause":
+                    binder.pauseMusic();
+                    break;
+                case "next":
+                    binder.playForMode(0);
+                    break;
+                case "prev":
+                    binder.playForMode(1);
+                    break;
+            }
+        }
+    };
+
 }

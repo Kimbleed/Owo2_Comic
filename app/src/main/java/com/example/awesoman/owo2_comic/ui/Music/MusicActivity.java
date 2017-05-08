@@ -112,21 +112,40 @@ public class MusicActivity extends BaseActivity
             case R.id.musicStartBtn:
                 if (binder.isPlaying()) {
                     musicStartBtn.setBackground(getResources().getDrawable(R.drawable.music_start));
-                    binder.pauseMusic();
+//                    binder.pauseMusic();
+                    sendMusicBroadcastMehtod("pause");
                 } else {
                     musicStartBtn.setBackground(getResources().getDrawable(R.drawable.music_stop));
                     binder.playMusic(binder.getCurrentIndex());
+//                    sendMusicBroadcastMehtod("pause");
                 }
                 break;
             case R.id.musicNextBtn:
-                binder.playForMode(0);
+//                binder.playForMode(0);
+                sendMusicBroadcastMehtod("next");
                 break;
             case R.id.musicPrevBtn:
-                binder.playForMode(1);
+//                binder.playForMode(1);
+                sendMusicBroadcastMehtod("prev");
                 break;
             case R.id.backBtn:
                 finish();
         }
+    }
+
+
+    /**
+     * 发广播触发服务动作
+     * @param method
+     *  1.continue
+     *  2.pause
+     *  3.next
+     *  4.prev
+     */
+    public void sendMusicBroadcastMehtod(String method){
+        Intent broadcastIntent = new Intent(getPackageName() + MusicService.BROADCAST_ACTION);
+        broadcastIntent.putExtra("method",method);
+        sendBroadcast(broadcastIntent);
     }
 
     @Override
