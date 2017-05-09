@@ -10,7 +10,8 @@
         android:id="@+id/widget_album"
         android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:contentDescription="这是专辑图片" />
+        android:contentDescription="这是专辑图片"
+        android:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +39,8 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text="asdadasfafasf"/>
 
                 <ImageView
                     android:id="@+id/widget_close"
@@ -87,12 +89,6 @@
                 android:layout_weight="1"
                 android:src="@drawable/music_next" />
 
-            <ImageView
-                android:id="@+id/widget_fav"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/music_next" />
         </LinearLayout>
     </LinearLayout>
 

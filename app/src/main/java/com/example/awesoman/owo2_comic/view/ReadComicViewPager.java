@@ -3,7 +3,6 @@ package com.example.awesoman.owo2_comic.view;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -13,7 +12,7 @@ import android.view.MotionEvent;
 public class ReadComicViewPager extends ViewPager {
 
     private float vpWidth,xTouchStart,yTouchStart ;
-    private long touchStartTime;//第一次点击时间
+    private long touchFirstTime;//第一次点击时间
     private IMyViewPager listener;
 
     public void setListener(IMyViewPager listener) {
@@ -42,19 +41,20 @@ public class ReadComicViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-//        Log.i("dispatchTouchEvent",this.getClass().toString()+(super.dispatchTouchEvent(ev)?"true":"false"));
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if(touchFirstTime  !=0 ){
+                    touchFirstTime = System.currentTimeMillis();
+                }
+                else
                 xTouchStart = ev.getX();
                 yTouchStart = ev.getY();
-                touchStartTime = System.currentTimeMillis();
+
             break;
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
-                if(Math.abs(ev.getX()-xTouchStart)<10
-                        && Math.abs(ev.getY()-yTouchStart)<10
-                        ){
+                if(Math.abs(ev.getX()-xTouchStart)<10 && Math.abs(ev.getY()-yTouchStart)<10){
                     int part = -1;
                     if(listener!=null) {
                         if (xTouchStart < vpWidth / 3) {

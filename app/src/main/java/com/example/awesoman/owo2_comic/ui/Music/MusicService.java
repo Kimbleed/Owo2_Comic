@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.utils.NotifyUtils;
 
 import java.io.File;
 import java.util.List;
@@ -55,6 +56,7 @@ public class MusicService extends Service {
         mediaPlayer = new MediaPlayer();
         IntentFilter intentFilter = new IntentFilter(getPackageName()+BROADCAST_ACTION);
         registerReceiver(serviceController,intentFilter);
+        NotifyUtils.showNotification(getBaseContext(),"Owo2_Music");
 
     }
 

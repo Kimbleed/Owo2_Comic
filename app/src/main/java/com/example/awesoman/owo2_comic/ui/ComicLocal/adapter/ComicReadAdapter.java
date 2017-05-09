@@ -58,7 +58,6 @@ public class ComicReadAdapter extends PagerAdapter {
                 @Override
                 protected Bitmap doInBackground(Void... params) {
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inSampleSize = 4;
                     Bitmap bitmap = BitmapFactory.decodeFile(chapterPath+File.separator+pages.get(position),options);
                     return bitmap;
                 }
