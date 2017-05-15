@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -32,7 +33,7 @@ import butterknife.Bind;
  */
 
 public class ComicReadActivity extends BaseActivity
-        implements ReadComicViewPager.IMyViewPager,View.OnClickListener{
+        implements ReadComicViewPager.IMyViewPager, View.OnClickListener {
     @Bind(R.id.vp_read)
     ReadComicViewPager vp_read;
     @Bind(R.id.moreSelectLinear)
@@ -47,7 +48,7 @@ public class ComicReadActivity extends BaseActivity
 
     private List<String> pages = null;
     private List<String> pagesPath = null;
-    float titleStartY,titleEndY,selectStartY,selectEndY;
+    float titleStartY, titleEndY, selectStartY, selectEndY;
 
     ComicReadAdapter comicReadAdapter;
     private MyImageLoader imageLoader;
@@ -66,18 +67,28 @@ public class ComicReadActivity extends BaseActivity
         String chapter = bundle.getString("chapter");
         comicReadAdapter = new ComicReadAdapter(this);
 
-        chapterPath = path+ File.separator+chapter;
+        chapterPath = path + File.separator + chapter;
         comicReadAdapter.setChapterPath(chapterPath);
 
-        pages = FileManager.getInstance().getComicPhotoList(path,chapter);
+        pages = FileManager.getInstance().getComicPhotoList(path, chapter);
         comicReadAdapter.setPages(pages);
 
+        comicReadAdapter.setListener(new ComicReadAdapter.IDoubleClick() {
+            @Override
+            public void doubleClick() {
+//                Log.i("ComicReadActivity","IDoubleClick");
+//                vp_read.setNoScroll(!vp_read.isNoScroll());
+            }
+        });
+
+
+
         pagesPath = new ArrayList<>();
-        for(String page:pages){
-            pagesPath.add(chapterPath+File.separator+page);
+        for (String page : pages) {
+            pagesPath.add(chapterPath + File.separator + page);
         }
         imageLoader = MyImageLoader.getInstance();
-        new AsyncTask(){
+        new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] params) {
                 imageLoader.addBitmapsToCache(pagesPath);
@@ -94,7 +105,7 @@ public class ComicReadActivity extends BaseActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch(id){
+        switch (id) {
             case R.id.backBtn:
                 finish();
                 break;
@@ -103,19 +114,18 @@ public class ComicReadActivity extends BaseActivity
 
     @Override
     public void clickOnViewPager(int part) {
-        if(part==2)
-            vp_read.setCurrentItem(vp_read.getCurrentItem()+1);
-        else if(part == 1){
+        if (part == 2)
+            vp_read.setCurrentItem(vp_read.getCurrentItem() + 1);
+        else if (part == 1) {
             showOrHideMoreSelect();
-        }
-        else{
-            if(vp_read.getCurrentItem()!=0)
-                vp_read.setCurrentItem(vp_read.getCurrentItem()-1);
+        } else {
+            if (vp_read.getCurrentItem() != 0)
+                vp_read.setCurrentItem(vp_read.getCurrentItem() - 1);
         }
     }
 
-    public void initMoreSelect(){
-        if(titleStartY>=0) {
+    public void initMoreSelect() {
+        if (titleStartY >= 0) {
             titleStartY = titleLinear.getY() - titleLinear.getHeight();
             titleEndY = titleLinear.getY();
 
@@ -124,21 +134,20 @@ public class ComicReadActivity extends BaseActivity
         }
     }
 
-    public void showOrHideMoreSelect(){
+    public void showOrHideMoreSelect() {
         //title框
-        ValueAnimator showTitleAni =null;
+        ValueAnimator showTitleAni = null;
         //select框
         ValueAnimator showSelectAni = null;
 
         initMoreSelect();
 
-        if(isInVisible){
-            showTitleAni =  ObjectAnimator.ofFloat(titleLinear,"y",titleEndY,titleStartY);
-            showSelectAni = ObjectAnimator.ofFloat(moreSelectLinear,"y",selectEndY,selectStartY);
-        }
-        else{
-            showTitleAni =  ObjectAnimator.ofFloat(titleLinear,"y",titleStartY,titleEndY);
-            showSelectAni = ObjectAnimator.ofFloat(moreSelectLinear,"y",selectStartY,selectEndY);
+        if (isInVisible) {
+            showTitleAni = ObjectAnimator.ofFloat(titleLinear, "y", titleEndY, titleStartY);
+            showSelectAni = ObjectAnimator.ofFloat(moreSelectLinear, "y", selectEndY, selectStartY);
+        } else {
+            showTitleAni = ObjectAnimator.ofFloat(titleLinear, "y", titleStartY, titleEndY);
+            showSelectAni = ObjectAnimator.ofFloat(moreSelectLinear, "y", selectStartY, selectEndY);
         }
         //title框动画设置
         showTitleAni.setDuration(500);
@@ -151,7 +160,7 @@ public class ComicReadActivity extends BaseActivity
         AnimatorSet set = new AnimatorSet();
         set.play(showTitleAni).with(showSelectAni);
 
-        if(isInVisible){
+        if (isInVisible) {
             set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -161,7 +170,7 @@ public class ComicReadActivity extends BaseActivity
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     setVisible(false);
-                    isInVisible =false;
+                    isInVisible = false;
                 }
 
                 @Override
@@ -174,8 +183,7 @@ public class ComicReadActivity extends BaseActivity
 
                 }
             });
-        }
-        else{
+        } else {
             set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -184,7 +192,7 @@ public class ComicReadActivity extends BaseActivity
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    isInVisible =  true;
+                    isInVisible = true;
                 }
 
                 @Override
@@ -205,17 +213,14 @@ public class ComicReadActivity extends BaseActivity
     }
 
     /**
-     *
-     * @param flag
-     * true可见
-     * false不可见
+     * @param flag true可见
+     *             false不可见
      */
-    public void setVisible(boolean flag){
-        if(flag) {
+    public void setVisible(boolean flag) {
+        if (flag) {
             moreSelectLinear.setVisibility(View.VISIBLE);
             titleLinear.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             moreSelectLinear.setVisibility(View.INVISIBLE);
             titleLinear.setVisibility(View.INVISIBLE);
         }

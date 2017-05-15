@@ -380,7 +380,7 @@ public class ComicLocalFragment extends Fragment
         Intent intent = new Intent(getContext(),ComicChapterActivity.class);
         intent.putExtra("comicBean",comicHomeList.get(position));
         SkipUtil.skip(getContext(),intent,false);
-        ((MainActivity)getContext()).jumpAnimation(1);
+        ((MainActivity)getContext()). jumpAnimation(1);
     }
 
     @Override

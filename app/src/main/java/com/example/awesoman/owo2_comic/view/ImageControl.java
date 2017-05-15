@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -300,5 +300,33 @@ public class ImageControl extends ImageView {
      */
     public interface ICustomMethod {
         public void customMethod(Boolean currentStatus);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                mouseDown(event);
+                break;
+
+            /**
+             * 非第一个点按下
+             */
+            case MotionEvent.ACTION_POINTER_DOWN:
+                mousePointDown(event);
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mouseMove(event);
+                break;
+
+            case MotionEvent.ACTION_UP:
+                mouseUp();
+                break;
+
+        }
+
+        return super.onTouchEvent(event);
+
     }
 }

@@ -1,8 +1,11 @@
 package com.example.awesoman.owo2_comic.view;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -12,8 +15,40 @@ import android.view.MotionEvent;
 public class ReadComicViewPager extends ViewPager {
 
     private float vpWidth,xTouchStart,yTouchStart ;
-    private long touchFirstTime;//第一次点击时间
+    private boolean noScroll = false;
     private IMyViewPager listener;
+    private final int HANDLER_FIRST_CLICK = 100;
+    private final int HANDLER_SECOND_CLICK = 200;
+    private final int HADNLER_CLEAR_UP_TIME = 300;
+    private boolean hasFirstClick = false;
+
+    private Handler mClickHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_FIRST_CLICK:
+                    Log.i("ViewPagerOnTouch","HADNLER:FIRST_CLICK");
+                    listener.clickOnViewPager((int)msg.obj);
+                    break;
+                case HANDLER_SECOND_CLICK:
+                    Log.i("ViewPagerOnTouch","HADNLER:SECOND_CLICK");
+                    removeMessages(HANDLER_FIRST_CLICK);
+                    break;
+                case HADNLER_CLEAR_UP_TIME:
+                    Log.i("ViewPagerOnTouch","HADNLER:CLEAR_UP");
+                    hasFirstClick = false;
+                    break;
+            }
+        }
+    };
+
+    public void setNoScroll(boolean noScroll) {
+        this.noScroll = noScroll;
+    }
+
+    public boolean isNoScroll() {
+        return noScroll;
+    }
 
     public void setListener(IMyViewPager listener) {
         this.listener = listener;
@@ -34,19 +69,9 @@ public class ReadComicViewPager extends ViewPager {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-//        Log.i("onTouchEvent",this.getClass().toString()+(super.onTouchEvent(ev)?"true":"false"));
-        return super.onTouchEvent(ev);
-    }
-
-    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(touchFirstTime  !=0 ){
-                    touchFirstTime = System.currentTimeMillis();
-                }
-                else
                 xTouchStart = ev.getX();
                 yTouchStart = ev.getY();
 
@@ -54,18 +79,35 @@ public class ReadComicViewPager extends ViewPager {
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
-                if(Math.abs(ev.getX()-xTouchStart)<10 && Math.abs(ev.getY()-yTouchStart)<10){
-                    int part = -1;
-                    if(listener!=null) {
-                        if (xTouchStart < vpWidth / 3) {
-                            listener.clickOnViewPager(0);
-                        } else if (xTouchStart < vpWidth / 3 * 2 && xTouchStart > vpWidth / 3) {
-                            listener.clickOnViewPager(1);
-                        } else {
-                            listener.clickOnViewPager(2);
+                    if (Math.abs(ev.getX() - xTouchStart) < 10 && Math.abs(ev.getY() - yTouchStart) < 10) {
+                        int part = -1;
+                        if (listener != null ) {
+                            Message message = new Message();
+                            message.what = HANDLER_FIRST_CLICK;
+
+                            if (xTouchStart < vpWidth / 3) {
+                                message.obj = 0;
+                            } else if (xTouchStart < vpWidth / 3 * 2 && xTouchStart > vpWidth / 3) {
+                                message.obj = 1;
+                            } else {
+                                message.obj = 2;
+                            }
+
+                            if(!hasFirstClick ) {
+                                Log.i("ViewPagerOnTouch","FirstClick");
+                                hasFirstClick = true;
+                                if(!noScroll) {
+                                    mClickHandler.sendMessageDelayed(message, 500);
+                                }
+                                mClickHandler.sendEmptyMessageDelayed(HADNLER_CLEAR_UP_TIME, 400);
+                            }
+                            else{
+                                Log.i("ViewPagerOnTouch","SecondClick");
+                                mClickHandler.sendEmptyMessage(HANDLER_SECOND_CLICK);
+                                noScroll = !noScroll;
+                            }
                         }
-                    }
-                    return true;
+                        return true;
                 }
                 break;
         }
@@ -77,5 +119,21 @@ public class ReadComicViewPager extends ViewPager {
      */
     public interface IMyViewPager{
         void clickOnViewPager(int part);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent arg0) {
+        if (noScroll)
+            return false;
+        else
+            return super.onTouchEvent(arg0);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent arg0) {
+        if (noScroll)
+            return false;
+        else
+            return super.onInterceptTouchEvent(arg0);
     }
 }
