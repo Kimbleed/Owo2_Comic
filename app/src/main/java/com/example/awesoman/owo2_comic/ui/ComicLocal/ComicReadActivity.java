@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -75,9 +76,19 @@ public class ComicReadActivity extends BaseActivity
 
         comicReadAdapter.setListener(new ComicReadAdapter.IDoubleClick() {
             @Override
-            public void doubleClick(boolean isBig) {
+            public void doubleClick(final boolean isBig) {
 //                Log.i("ComicReadActivity","IDoubleClick");
-                vp_read.setNoScroll(isBig);
+                Log.i("CEN", "DoubleClick  >> HANDLER_SECOND_CLICK");
+                if(isBig){
+                    vp_read.setNoScroll(isBig);
+                }else{
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            vp_read.setNoScroll(isBig);
+                        }
+                    },100);
+                }
                 vp_read.mClickHandler.sendEmptyMessage(ReadComicViewPager.HANDLER_SECOND_CLICK);
             }
         });

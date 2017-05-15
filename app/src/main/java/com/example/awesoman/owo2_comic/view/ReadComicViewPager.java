@@ -27,15 +27,15 @@ public class ReadComicViewPager extends ViewPager {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_FIRST_CLICK:
-                    Log.i("ViewPagerOnTouch", "HADNLER:FIRST_CLICK");
+                    Log.i("CEN", "handle: HADNLER_FIRST_CLICK");
                     listener.clickOnViewPager((int) msg.obj);
                     break;
                 case HANDLER_SECOND_CLICK:
-                    Log.i("ViewPagerOnTouch", "HADNLER:SECOND_CLICK");
+                    Log.i("CEN", "handle: HADNLER_SECOND_CLICK");
                     removeMessages(HANDLER_FIRST_CLICK);
                     break;
                 case HADNLER_CLEAR_UP_TIME:
-                    Log.i("ViewPagerOnTouch", "HADNLER:CLEAR_UP");
+                    Log.i("CEN", "handle:HADNLER_CLEAR_UP>>>>>再点击视为第一次点击");
                     hasFirstClick = false;
                     break;
             }
@@ -72,6 +72,7 @@ public class ReadComicViewPager extends ViewPager {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.i("CEN", "FirstClick_ACTION_DOWN");
                 xTouchStart = ev.getX();
                 yTouchStart = ev.getY();
                 break;
@@ -83,7 +84,6 @@ public class ReadComicViewPager extends ViewPager {
                     if (listener != null) {
                         Message message = new Message();
                         message.what = HANDLER_FIRST_CLICK;
-
                         if (xTouchStart < vpWidth / 3) {
                             message.obj = 0;
                         } else if (xTouchStart < vpWidth / 3 * 2 && xTouchStart > vpWidth / 3) {
@@ -91,16 +91,17 @@ public class ReadComicViewPager extends ViewPager {
                         } else {
                             message.obj = 2;
                         }
-
                             //第一次点击
-                            Log.i("ViewPagerOnTouch", "FirstClick");
+                            Log.i("CEN", "FirstClick_ACTION_UP");
                             hasFirstClick = true;
                             if (!noScroll) {
+                                Log.i("CEN", "FirstClick  >> send:HANDLER_FIRST_CLICK");
                                 mClickHandler.sendMessageDelayed(message, 500);
+                                return true;
                             }
+                            Log.i("CEN", "FirstClick  >> send:HADNLER_CLEAR_UP_TIME");
                             mClickHandler.sendEmptyMessageDelayed(HADNLER_CLEAR_UP_TIME, 400);
                     }
-                    return true;
                 }
                 break;
         }
