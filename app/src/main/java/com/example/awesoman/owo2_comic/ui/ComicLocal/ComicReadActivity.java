@@ -75,9 +75,10 @@ public class ComicReadActivity extends BaseActivity
 
         comicReadAdapter.setListener(new ComicReadAdapter.IDoubleClick() {
             @Override
-            public void doubleClick() {
+            public void doubleClick(boolean isBig) {
 //                Log.i("ComicReadActivity","IDoubleClick");
-//                vp_read.setNoScroll(!vp_read.isNoScroll());
+                vp_read.setNoScroll(isBig);
+                vp_read.mClickHandler.sendEmptyMessage(ReadComicViewPager.HANDLER_SECOND_CLICK);
             }
         });
 

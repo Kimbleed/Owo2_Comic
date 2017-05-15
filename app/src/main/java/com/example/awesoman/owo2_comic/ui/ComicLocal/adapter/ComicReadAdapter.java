@@ -103,7 +103,7 @@ public class ComicReadAdapter extends PagerAdapter {
 
                             @Override
                             public void customMethod(Boolean currentStatus) {
-                                listener.doubleClick();
+                                listener.doubleClick(view.isBig);
                             }
                         });
 
@@ -143,7 +143,7 @@ public class ComicReadAdapter extends PagerAdapter {
     }
 
     public interface IDoubleClick{
-        void doubleClick();
+        void doubleClick(boolean isBig);
     }
 
 }

@@ -39,7 +39,7 @@ public class ImageControl extends ImageView {
     private int mode = NONE; // 当前模式
 
     float bigScale = 3f; // 默认放大倍数
-    Boolean isBig = false; // 是否是放大状态
+    public Boolean isBig = false; // 是否是放大状态
     long lastClickTime = 0; // 单击时间
     double startDistance; // 多点触摸两点距离
     double endDistance; // 多点触摸两点距离

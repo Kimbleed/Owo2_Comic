@@ -74,6 +74,8 @@ public class MusicService extends Service {
 
         private int currentTime = 0;
 
+
+
         public PlayerBinder() {
             Thread thread = new Thread(){
                 @Override
