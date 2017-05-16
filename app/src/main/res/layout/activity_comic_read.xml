@@ -11,6 +11,13 @@
         android:layout_height="match_parent"
         ></com.example.awesoman.owo2_comic.view.ReadComicViewPager>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_read"
+        android:layout_marginTop="@dimen/read_margin_top"
+        android:layout_marginBottom="@dimen/read_margin_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

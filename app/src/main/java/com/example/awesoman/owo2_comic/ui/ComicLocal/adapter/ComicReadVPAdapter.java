@@ -24,13 +24,11 @@ import java.util.List;
  * 漫画阅读Activity的PageAdapter
  */
 
-public class ComicReadAdapter extends PagerAdapter {
+public class ComicReadVPAdapter extends PagerAdapter {
 
 
-    public ComicReadAdapter(Context context) {
+    public ComicReadVPAdapter(Context context) {
         this.CTX = context;
-        imageLoader = MyImageLoader.getInstance();
-
         screenW = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
         screenH = ((Activity)context).getWindowManager().getDefaultDisplay().getHeight();
         Rect frame = new Rect();
@@ -38,10 +36,10 @@ public class ComicReadAdapter extends PagerAdapter {
         statusBarHeight = frame.top;
     }
 
-    private MyImageLoader imageLoader;
     private String chapterPath;
     private List<String> pages;
     Context CTX;
+    private int pageIndex;
 
     private int screenW;
     private int screenH;
@@ -111,7 +109,7 @@ public class ComicReadAdapter extends PagerAdapter {
             }
         }.execute();
         container.addView(view);
-
+        pageIndex = position;
 
         return view;
     }

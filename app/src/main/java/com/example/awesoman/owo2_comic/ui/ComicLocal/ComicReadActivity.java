@@ -4,9 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -15,15 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadRVAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
-import com.example.awesoman.owo2_comic.utils.MyImageLoader;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.view.ReadComicViewPager;
-import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadAdapter;
+import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadVPAdapter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -37,6 +37,8 @@ public class ComicReadActivity extends BaseActivity
         implements ReadComicViewPager.IMyViewPager, View.OnClickListener {
     @Bind(R.id.vp_read)
     ReadComicViewPager vp_read;
+    @Bind(R.id.rv_read)
+    RecyclerView rv_read;
     @Bind(R.id.moreSelectLinear)
     LinearLayout moreSelectLinear;
     @Bind(R.id.titleLinear)
@@ -46,15 +48,17 @@ public class ComicReadActivity extends BaseActivity
     @Bind(R.id.titleTxt)
     TextView titleTxt;
 
-
     private List<String> pages = null;
-    private List<String> pagesPath = null;
     float titleStartY, titleEndY, selectStartY, selectEndY;
 
-    ComicReadAdapter comicReadAdapter;
-    private MyImageLoader imageLoader;
-    String chapterPath = null;
+    private ComicReadVPAdapter comicReadVPAdapter;
+    private ComicReadRVAdapter comicReadRVAdapter;
+    private String chapterPath = null;
     private boolean isInVisible;
+
+    public static final int READ_MODE_PAGING_RIGHT =1;
+    public static final int READ_MODE_PAGING_LEFT =2;
+    public static final int READ_MODE_ROLL =3;
 
     @Override
     public int getContentViewID() {
@@ -66,15 +70,15 @@ public class ComicReadActivity extends BaseActivity
         Bundle bundle = getIntent().getExtras();
         String path = bundle.getString("path");
         String chapter = bundle.getString("chapter");
-        comicReadAdapter = new ComicReadAdapter(this);
+        comicReadVPAdapter = new ComicReadVPAdapter(this);
 
         chapterPath = path + File.separator + chapter;
-        comicReadAdapter.setChapterPath(chapterPath);
+        comicReadVPAdapter.setChapterPath(chapterPath);
 
         pages = FileManager.getInstance().getComicPhotoList(path, chapter);
-        comicReadAdapter.setPages(pages);
+        comicReadVPAdapter.setPages(pages);
 
-        comicReadAdapter.setListener(new ComicReadAdapter.IDoubleClick() {
+        comicReadVPAdapter.setListener(new ComicReadVPAdapter.IDoubleClick() {
             @Override
             public void doubleClick(final boolean isBig) {
 //                Log.i("ComicReadActivity","IDoubleClick");
@@ -93,21 +97,7 @@ public class ComicReadActivity extends BaseActivity
             }
         });
 
-
-
-        pagesPath = new ArrayList<>();
-        for (String page : pages) {
-            pagesPath.add(chapterPath + File.separator + page);
-        }
-        imageLoader = MyImageLoader.getInstance();
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                imageLoader.addBitmapsToCache(pagesPath);
-                return null;
-            }
-        }.execute();
-        vp_read.setAdapter(comicReadAdapter);
+        vp_read.setAdapter(comicReadVPAdapter);
         vp_read.setListener(this);
         backBtn.setOnClickListener(this);
         titleTxt.setText(chapter);
@@ -236,5 +226,22 @@ public class ComicReadActivity extends BaseActivity
             moreSelectLinear.setVisibility(View.INVISIBLE);
             titleLinear.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void changeReadMode(int mode){
+        if(mode ==READ_MODE_PAGING_RIGHT){
+
+        }
+        else if(mode == READ_MODE_PAGING_LEFT){
+
+        }
+        else if(mode == READ_MODE_ROLL){
+            RecyclerView.LayoutManager lm = new LinearLayoutManager(ComicReadActivity.this,LinearLayoutManager.VERTICAL,false);
+            rv_read.setLayoutManager(lm);
+            comicReadRVAdapter.setChapterPath(chapterPath);
+            comicReadRVAdapter.setPages(pages);
+            rv_read.setAdapter(comicReadRVAdapter);
+        }
+
     }
 }
