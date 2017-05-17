@@ -39,19 +39,19 @@ public class NotifyUtils {
 
 
         //继续播放
-        Intent intentContinue = new Intent(MusicService.BROADCAST_ACTION);
+        Intent intentContinue = new Intent(context.getPackageName()+MusicService.BROADCAST_ACTION);
         intentContinue.putExtra("method","play");
         PendingIntent pendingIntentContinue = PendingIntent.getBroadcast(context,1001,intentContinue,PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.widget_play,pendingIntentContinue);
 
         //下一首
-        Intent intentNext = new Intent(MusicService.BROADCAST_ACTION);
+        Intent intentNext = new Intent(context.getPackageName()+MusicService.BROADCAST_ACTION);
         intentNext.putExtra("method","next");
         PendingIntent pendingIntentNext = PendingIntent.getBroadcast(context,1002,intentNext,PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.widget_next,pendingIntentNext);
 
         //上一首
-        Intent intentPrev = new Intent(MusicService.BROADCAST_ACTION);
+        Intent intentPrev = new Intent(context.getPackageName()+MusicService.BROADCAST_ACTION);
         intentPrev.putExtra("method","next");
         PendingIntent pendingIntentPrev = PendingIntent.getBroadcast(context,1003,intentPrev,PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.widget_prev,pendingIntentPrev);

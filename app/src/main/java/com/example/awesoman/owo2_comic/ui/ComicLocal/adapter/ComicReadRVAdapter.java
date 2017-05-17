@@ -30,7 +30,6 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
     private int pageIndex;
 
 
-    String[] imagType = {".jpg", ".png", ".bmp", ".gif", ".jpeg", ".tif", ".ico"};
 
     public ComicReadRVAdapter(Context CTX) {
         this.CTX = CTX;
@@ -41,17 +40,16 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
         return pageIndex;
     }
 
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
     public void setChapterPath(String chapterPath) {
         this.chapterPath = chapterPath;
     }
 
     public void setPages(List<String> pages) {
-        pageIndex = 0;
         this.pages = pages;
+    }
+
+    public List<String> getPages() {
+        return pages;
     }
 
     @Override
@@ -82,25 +80,15 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return pages.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public MyViewHolder(View itemView) {
             super(itemView);
-            itemView = (ImageView) itemView.findViewById(R.id.iv);
+            imageView = (ImageView) itemView.findViewById(R.id.iv);
         }
         ImageView imageView;
     }
 
-    /**
-     * 判断1.视频 或  2.图片
-     */
-    public boolean judgePhoto(String str) {
-        for (String type : imagType) {
-            if (str.contains(type))
-                return true;
-        }
-        return false;
-    }
 }

@@ -47,11 +47,11 @@ public class ComicReadVPAdapter extends PagerAdapter {
 
     private IDoubleClick listener;
 
+
+
     public void setListener(IDoubleClick listener) {
         this.listener = listener;
     }
-
-    String[] imagType = {".jpg", ".png", ".bmp", ".gif", ".jpeg", ".tif", ".ico"};
 
 
     public String getChapterPath() {
@@ -67,13 +67,16 @@ public class ComicReadVPAdapter extends PagerAdapter {
     }
 
     public void setPages(List<String> pages) {
-        for(int i  = 0;i<pages.size();i++){
-            if(!judgePhoto(pages.get(i))){
-                pages.remove(i);
-            }
-
-        }
         this.pages = pages;
+    }
+
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 
     @Override
@@ -129,16 +132,7 @@ public class ComicReadVPAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    /**
-     * 判断1.视频 或  2.图片
-     */
-    public boolean judgePhoto(String str) {
-        for (String type : imagType) {
-            if (str.contains(type))
-                return true;
-        }
-        return false;
-    }
+
 
     public interface IDoubleClick{
         void doubleClick(boolean isBig);

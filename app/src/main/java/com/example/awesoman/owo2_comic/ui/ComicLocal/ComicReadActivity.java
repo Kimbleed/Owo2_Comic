@@ -20,6 +20,7 @@ import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadRVAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
+import com.example.awesoman.owo2_comic.utils.FileUtils;
 import com.example.awesoman.owo2_comic.view.ReadComicViewPager;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadVPAdapter;
 
@@ -27,6 +28,7 @@ import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Created by Awesome on 2016/11/11.
@@ -48,6 +50,10 @@ public class ComicReadActivity extends BaseActivity
     @Bind(R.id.titleTxt)
     TextView titleTxt;
 
+
+    @Bind(R.id.changeLinear)
+    LinearLayout changeLinear;
+
     private List<String> pages = null;
     float titleStartY, titleEndY, selectStartY, selectEndY;
 
@@ -56,9 +62,9 @@ public class ComicReadActivity extends BaseActivity
     private String chapterPath = null;
     private boolean isInVisible;
 
-    public static final int READ_MODE_PAGING_RIGHT =1;
-    public static final int READ_MODE_PAGING_LEFT =2;
-    public static final int READ_MODE_ROLL =3;
+    public static final int READ_MODE_PAGING_RIGHT = 1;
+    public static final int READ_MODE_PAGING_LEFT = 2;
+    public static final int READ_MODE_ROLL = 3;
 
     @Override
     public int getContentViewID() {
@@ -70,12 +76,19 @@ public class ComicReadActivity extends BaseActivity
         Bundle bundle = getIntent().getExtras();
         String path = bundle.getString("path");
         String chapter = bundle.getString("chapter");
+
+        ////右翻页    阅读模式---------------开始
         comicReadVPAdapter = new ComicReadVPAdapter(this);
 
         chapterPath = path + File.separator + chapter;
         comicReadVPAdapter.setChapterPath(chapterPath);
 
         pages = FileManager.getInstance().getComicPhotoList(path, chapter);
+        for(int i  = 0;i<pages.size();i++){
+            if(!FileUtils.judgePhoto(pages.get(i))){
+                pages.remove(i);
+            }
+        }
         comicReadVPAdapter.setPages(pages);
 
         comicReadVPAdapter.setListener(new ComicReadVPAdapter.IDoubleClick() {
@@ -83,15 +96,15 @@ public class ComicReadActivity extends BaseActivity
             public void doubleClick(final boolean isBig) {
 //                Log.i("ComicReadActivity","IDoubleClick");
                 Log.i("CEN", "DoubleClick  >> HANDLER_SECOND_CLICK");
-                if(isBig){
+                if (isBig) {
                     vp_read.setNoScroll(isBig);
-                }else{
+                } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             vp_read.setNoScroll(isBig);
                         }
-                    },100);
+                    }, 100);
                 }
                 vp_read.mClickHandler.sendEmptyMessage(ReadComicViewPager.HANDLER_SECOND_CLICK);
             }
@@ -99,8 +112,24 @@ public class ComicReadActivity extends BaseActivity
 
         vp_read.setAdapter(comicReadVPAdapter);
         vp_read.setListener(this);
+        //右翻页    阅读模式---------------结束
+
+
+        //上下滚动  阅读模式---------------开始
+        //线性布局 垂直方向
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(ComicReadActivity.this, LinearLayoutManager.VERTICAL, false);
+        rv_read.setLayoutManager(lm);
+        //初始化ComicReadRVAdapter
+        comicReadRVAdapter = new ComicReadRVAdapter(ComicReadActivity.this);
+        comicReadRVAdapter.setChapterPath(chapterPath);
+        comicReadRVAdapter.setPages(pages);
+        rv_read.setAdapter(comicReadRVAdapter);
+        //上下滚动  阅读模式---------------结束
+
         backBtn.setOnClickListener(this);
         titleTxt.setText(chapter);
+
+        rv_read.setVisibility(View.INVISIBLE);
 
     }
 
@@ -136,10 +165,20 @@ public class ComicReadActivity extends BaseActivity
         }
     }
 
+    @OnClick(R.id.changeLinear)
+    public void showReadModeDialog() {
+        changeReadMode(READ_MODE_ROLL, comicReadVPAdapter.getPageIndex());
+    }
+
+    @OnClick(R.id.saveLinear)
+    public void savePict(){
+
+    }
+
     public void showOrHideMoreSelect() {
-        //title框
+        //title框动画
         ValueAnimator showTitleAni = null;
-        //select框
+        //select框动画
         ValueAnimator showSelectAni = null;
 
         initMoreSelect();
@@ -228,20 +267,20 @@ public class ComicReadActivity extends BaseActivity
         }
     }
 
-    public void changeReadMode(int mode){
-        if(mode ==READ_MODE_PAGING_RIGHT){
+    public void changeReadMode(int mode, final int pageIndex) {
+        if (mode == READ_MODE_PAGING_RIGHT) {
 
-        }
-        else if(mode == READ_MODE_PAGING_LEFT){
+        } else if (mode == READ_MODE_PAGING_LEFT) {
 
+        } else if (mode == READ_MODE_ROLL) {
+            Log.i("CEN","pageIndexFrom VP"+pageIndex);
+            Log.i("CEN","sizeFrom VP"+comicReadVPAdapter.getPages().size());
+            Log.i("CEN","sizeFrom RV"+comicReadRVAdapter.getPages().size());
+            //位置貌似不是index  而是 顺位
+            ((LinearLayoutManager) rv_read.getLayoutManager()).scrollToPositionWithOffset(pageIndex-1, 0);
+            rv_read.setVisibility(View.VISIBLE);
+            vp_read.setVisibility(View.GONE);
+            showOrHideMoreSelect();
         }
-        else if(mode == READ_MODE_ROLL){
-            RecyclerView.LayoutManager lm = new LinearLayoutManager(ComicReadActivity.this,LinearLayoutManager.VERTICAL,false);
-            rv_read.setLayoutManager(lm);
-            comicReadRVAdapter.setChapterPath(chapterPath);
-            comicReadRVAdapter.setPages(pages);
-            rv_read.setAdapter(comicReadRVAdapter);
-        }
-
     }
 }

@@ -15,6 +15,8 @@ import java.io.OutputStream;
 
 public class FileUtils {
 
+
+    public static String[] imagType = {".jpg", ".png", ".bmp", ".gif", ".jpeg", ".tif", ".ico"};
     /**
      * 删除文件夹里的全部文件
      *
@@ -143,5 +145,16 @@ public class FileUtils {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 判断1.视频 或  2.图片
+     */
+    public static boolean judgePhoto(String str) {
+        for (String type : imagType) {
+            if (str.contains(type))
+                return true;
+        }
+        return false;
     }
 }
