@@ -297,7 +297,7 @@ public class FileManager {
 
     /**
      * 获取数据库中，某一种类漫画的全部漫画
-     * @param type
+     * @param type typeNo
      * @return
      */
     public List<ComicBean> getComicMenuFromDB(int type){
