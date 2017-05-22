@@ -7,16 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.util.Log;
 
 import com.example.awesoman.owo2_comic.application.MyApplication;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
-import com.example.awesoman.owo2_comic.sqlite.MySQLiteHelper;
+import com.example.awesoman.owo2_comic.model.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicTypeBean;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.MySQLiteHelper;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +27,8 @@ import java.util.List;
  */
 
 public class FileManager {
+
+    public static final String TAG = "FileManager";
 
     private Context context;
 
@@ -171,8 +175,8 @@ public class FileManager {
      * 获取数据库中所有漫画种类
      *
      */
-    public List<String> getComicTypeFromDB(){
-        List<String > data = new ArrayList<>();
+    public List<ComicTypeBean> getComicTypeFromDB(){
+        List<ComicTypeBean > data = new ArrayList<>();
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
 
@@ -180,13 +184,19 @@ public class FileManager {
 //        Cursor cursor =db.rawQuery(sql,null);
         Cursor cursor = db.query(ComicEntry.COMIC_TYPE_TABLE_NAME,null,null,null,null,null,null);
         if(cursor.getCount()>0) {
-
+            MyLogger.ddLog(TAG).i("ComicType size is more than 0");
             cursor.moveToFirst();
             do {
-                data.add(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME)));
+                ComicTypeBean bean = new ComicTypeBean();
+                bean.setComicTypeName(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME)));
+                bean.setComicTypeNo(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No))));
+                data.add(bean);
+                MyLogger.ddLog(TAG).i(new Gson().toJson(bean));
             }
             while (cursor.moveToNext());
-
+        }
+        else{
+            MyLogger.ddLog(TAG).i("ComicType size is not more than 0");
         }
         cursor.close();
         db.close();
@@ -194,9 +204,39 @@ public class FileManager {
     }
 
     /**
+     * 通过id 获取数据库中ComicType表中的种类名称
+     */
+    public String getComicTypeNameById(int i){
+        String name = null;
+        SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
+        SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = db.query(ComicEntry.COMIC_TYPE_TABLE_NAME,null,ComicEntry.TYPE_COLUMNS_NAME_COMIC_No +" =?",new String[]{i+""},null,null,null);
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            name = cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME));
+        }
+        return name;
+    }
+
+    /**
+     * 通过id 获取数据库中种类名称
+     */
+    public String getComicTypeIdByName(String name){
+        String id = null;
+        SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
+        SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = db.query(ComicEntry.COMIC_TYPE_TABLE_NAME,null,ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME+" = ?",new String[]{name},null,null,null);
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            id =  cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No));
+        }
+        return id;
+    }
+
+    /**
      * 从数据库中删除漫画种类
      */
-    public void deleteComicType(String type){
+    public void deleteComicTypeByName(String type){
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         ContentValues value = new ContentValues();
@@ -211,9 +251,20 @@ public class FileManager {
     public void addComicType(String type){
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
+
+        int maxNo = 0;
+
+        Cursor cursor = db.query(ComicEntry.COMIC_TYPE_TABLE_NAME,null,null,null,null,null,ComicEntry.TYPE_COLUMNS_NAME_COMIC_No + " desc");
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            maxNo = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No)));
+        }
         ContentValues value = new ContentValues();
         value.put(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME,type);
+        value.put(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No,(maxNo+1)+"");
         db.insert(ComicEntry.COMIC_TYPE_TABLE_NAME,null,value);
+        MyLogger.ddLog(TAG).i(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME+":"+type);
+        MyLogger.ddLog(TAG).i(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No+":"+maxNo);
         db.close();
     }
 
@@ -229,16 +280,19 @@ public class FileManager {
     }
 
     /**
-     * 修改漫画List的种类
+     * 修改List comicList 中所有漫画 的种类 为type
      */
     public void updateComicType(List<ComicBean> comicList, String type){
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         for(ComicBean entity:comicList) {
             ContentValues value = new ContentValues();
-            value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE,type);
-            db.update(ComicEntry.COMIC_ALL_TABLE_NAME,value,ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE,new String[]{entity.getComicName()});
+            value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME,entity.getComicName());
+            value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE,getComicTypeIdByName(type));
+            value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH,entity.getComicPath());
+            db.update(ComicEntry.COMIC_ALL_TABLE_NAME,value,ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME +"=?",new String[]{entity.getComicName()});
         }
+        db.close();
     }
 
     /**
@@ -246,12 +300,12 @@ public class FileManager {
      * @param type
      * @return
      */
-    public List<ComicBean> getComicMenuFromDB(String type){
+    public List<ComicBean> getComicMenuFromDB(int type){
         List<ComicBean> data = new ArrayList<>();
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
         String sql = "select * from "+ ComicEntry.COMIC_ALL_TABLE_NAME;
-        if(type !=null && !type.equals("全部"))
+        if(type !=1 )
             sql+=" where "+ ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE +" = \""+type+"\"";
         Cursor cursor =db.rawQuery(sql,null);
         if(cursor.getCount()>0) {
@@ -261,6 +315,7 @@ public class FileManager {
                 ComicBean comicBean =new ComicBean();
                 comicBean.setComicName(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME)));
                 comicBean.setComicPath(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH)));
+                comicBean.setComicType(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE)));
                 data.add(comicBean);
             }
             while (cursor.moveToNext());
@@ -337,5 +392,22 @@ public class FileManager {
     }
 
 
+
+    //音乐部分
+
+    /**
+     * 往数据库中添加音乐触发器
+     */
+    public void addMusicTrigger(String musicPath,String comicName,String comicChapter,String comicPage){
+        SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
+        SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
+        ContentValues value = new ContentValues();
+        value.put(ComicEntry.TRIGGER_COLUMNS_NAME_MUSIC_PATH,musicPath);
+        value.put(ComicEntry.TRIGGER_COLUMNS_NAME_COMIC_NAME,comicName);
+        value.put(ComicEntry.TRIGGER_COLUMNS_NAME_COMIC_CHAPTER,comicChapter);
+        value.put(ComicEntry.TRIGGER_COLUMNS_NAME_COMIC_PAGE,comicPage);
+        db.insert(ComicEntry.COMIC_TYPE_TABLE_NAME,null,value);
+        db.close();
+    }
 
 }

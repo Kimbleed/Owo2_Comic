@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -191,11 +192,11 @@ public class ComicReadActivity extends BaseActivity
             showSelectAni = ObjectAnimator.ofFloat(moreSelectLinear, "y", selectStartY, selectEndY);
         }
         //title框动画设置
-        showTitleAni.setDuration(500);
-        showTitleAni.setInterpolator(new LinearInterpolator());
+        showTitleAni.setDuration(200);
+        showTitleAni.setInterpolator(new AccelerateInterpolator());
 
         //select框动画设置
-        showSelectAni.setDuration(500);
+        showSelectAni.setDuration(200);
         showSelectAni.setInterpolator(new LinearInterpolator());
 
         AnimatorSet set = new AnimatorSet();

@@ -73,7 +73,6 @@ public class MusicAdapter extends BaseAdapter {
     class MusicItemHolder {
         public MusicItemHolder(View itemView) {
             this.itemView = itemView;
-            this.musicSurfaceImg = (ImageView)itemView.findViewById(R.id.musicSurfaceImg);
             this.musicNameTxt = (TextView)itemView.findViewById(R.id.musicNameTxt);
         }
         View itemView;

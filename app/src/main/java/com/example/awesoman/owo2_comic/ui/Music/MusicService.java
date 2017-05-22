@@ -12,7 +12,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.utils.NotifyUtils;
 
 import java.io.File;

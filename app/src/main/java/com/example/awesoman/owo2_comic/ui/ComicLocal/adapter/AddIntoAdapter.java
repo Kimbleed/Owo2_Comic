@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicBean;
 
 import java.util.ArrayList;
 import java.util.List;

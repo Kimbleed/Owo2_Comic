@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.utils.FileUtils;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class MyApplication extends Application {
         fileManager = FileManager.getInstance();
         initDir();
 
-        loadMusicFile();
+//        loadMusicFile();
     }
 
     public static Context getContext(){

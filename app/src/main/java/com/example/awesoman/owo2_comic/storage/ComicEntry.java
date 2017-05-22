@@ -1,4 +1,4 @@
-package com.example.awesoman.owo2_comic.sqlite;
+package com.example.awesoman.owo2_comic.storage;
 
 import android.os.Environment;
 import android.provider.BaseColumns;
@@ -55,7 +55,7 @@ public class ComicEntry implements BaseColumns {
                     COMIC_ALL_COLUMNS_NAME_COMIC_NAME + " text,   " +
                     COMIC_ALL_COLUMNS_NAME_COMIC_PATH +" text"+")";
     //ComicAll删除表格的SQL语句
-    public static final String IN_MAIN_SQL_DELETE_TABLE =
+    public static final String COMIC_ALL_SQL_DELETE_TABLE =
             "drop table if exists " + COMIC_ALL_TABLE_NAME;
 
 
@@ -73,5 +73,47 @@ public class ComicEntry implements BaseColumns {
 
     //ComicType删除表格的SQL语句
     public static final String TYPE_SQL_DELETE_TABLE =
-            "drop table if exists " + COMIC_ALL_TABLE_NAME;
+            "drop table if exists " + COMIC_TYPE_TABLE_NAME;
+
+
+
+    //ComicHistory表名
+    public static final String COMIC_HISTORY_TABLE_NAME = "ComicHistory";
+    //ComicHistory列名
+    public static final String HISTORY_COLUMNS_NAME_COMIC_NAME = "ComicName";
+    public static final String HISTORY_COLUMNS_NAME_COMIC_CHAPTER = "ComicChapter";
+    public static final String HISTORY_COLUMNS_NAME_COMIC_PAGE = "ComicPage";
+    //ComicHistory创建表格的SQL语句
+    public static final String SQL_CREATE_TABLE_COMIC_HISTORY =
+            "create table " + COMIC_HISTORY_TABLE_NAME + " (" +
+                    _ID + " integer primary key," +
+                    HISTORY_COLUMNS_NAME_COMIC_NAME + " text," +
+                    HISTORY_COLUMNS_NAME_COMIC_CHAPTER + " text" +
+                    HISTORY_COLUMNS_NAME_COMIC_PAGE+"text" +")";
+
+    //ComicHistory删除表格的SQL语句
+    public static final String COMIC_HISTORY_SQL_DELETE_TABLE =
+            "drop table if exists " + COMIC_HISTORY_TABLE_NAME;
+
+
+    //MusicTrigger表名
+    public static final String MUSIC_TRIGGER_TABLE_NAME = "MusicTrigger";
+    //MusicTrigger列名
+    public static final String TRIGGER_COLUMNS_NAME_MUSIC_PATH = "MusicPath";
+    public static final String TRIGGER_COLUMNS_NAME_COMIC_NAME = "ComicName";
+    public static final String TRIGGER_COLUMNS_NAME_COMIC_CHAPTER = "ComicChapter";
+    public static final String TRIGGER_COLUMNS_NAME_COMIC_PAGE = "ComicPage";
+    //MusicTrigger创建表格的SQL语句
+    public static final String SQL_CREATE_TABLE_MUSIC_TRIGGER =
+            "create table " + MUSIC_TRIGGER_TABLE_NAME + " (" +
+                    _ID + " integer primary key," +
+                    TRIGGER_COLUMNS_NAME_MUSIC_PATH + " text," +
+                    TRIGGER_COLUMNS_NAME_COMIC_NAME + " text" +
+                    TRIGGER_COLUMNS_NAME_COMIC_CHAPTER+"text" +
+                    TRIGGER_COLUMNS_NAME_COMIC_PAGE +"text" +")";
+
+    //MusicTrigger删除表格的SQL语句
+    public static final String MUSIC_TRIGGER_SQL_DELETE_TABLE =
+            "drop table if exists " + MUSIC_TRIGGER_TABLE_NAME;
+
 }

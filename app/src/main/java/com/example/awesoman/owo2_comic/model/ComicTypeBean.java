@@ -1,4 +1,4 @@
-package com.example.awesoman.owo2_comic.bean;
+package com.example.awesoman.owo2_comic.model;
 
 /**
  * Created by Awesome on 2016/11/7.
@@ -6,7 +6,7 @@ package com.example.awesoman.owo2_comic.bean;
 
 public class ComicTypeBean {
     String ComicTypeName;
-    String ComicTypeTable;
+    int ComicTypeNo;
 
     public String getComicTypeName() {
         return ComicTypeName;
@@ -16,11 +16,11 @@ public class ComicTypeBean {
         ComicTypeName = comicTypeName;
     }
 
-    public String getComicTypeTable() {
-        return ComicTypeTable;
+    public int getComicTypeNo() {
+        return ComicTypeNo;
     }
 
-    public void setComicTypeTable(String comicTypeTable) {
-        ComicTypeTable = comicTypeTable;
+    public void setComicTypeNo(int comicTypeNo) {
+        ComicTypeNo = comicTypeNo;
     }
 }

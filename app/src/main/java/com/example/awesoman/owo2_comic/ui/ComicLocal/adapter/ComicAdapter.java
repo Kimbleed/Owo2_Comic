@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicBean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +88,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
     @Override
     public void onBindViewHolder(final ComicViewHolder holder, final int position) {
         holder.tv_name.setText( mData.get(position).getComicName());
+        holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(Integer.parseInt(mData.get(position).getComicType())));
         holder.checkBox.setChecked(checkBoxList.get(position));
         if(!checkBoxIsVisible) {
             holder.checkBox.setVisibility(View.GONE);
@@ -131,10 +133,12 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
             img = (ImageView)itemView.findViewById(R.id.iv_comic_face);
             tv_name=(TextView)itemView.findViewById(R.id.tv_comic_name);
             checkBox = (CheckBox)itemView.findViewById(R.id.checkbox);
+            tv_type = (TextView)itemView.findViewById(R.id.tv_comic_type);
         }
         View container ;
         ImageView img;
         TextView tv_name;
+        TextView tv_type;
         CheckBox checkBox;
     }
 

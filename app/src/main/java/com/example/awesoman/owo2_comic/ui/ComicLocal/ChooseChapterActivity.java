@@ -3,21 +3,17 @@ package com.example.awesoman.owo2_comic.ui.ComicLocal;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
-import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;

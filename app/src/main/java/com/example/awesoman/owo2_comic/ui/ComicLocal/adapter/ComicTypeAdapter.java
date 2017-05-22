@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
+import com.example.awesoman.owo2_comic.model.ComicTypeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +24,19 @@ public class ComicTypeAdapter extends RecyclerView.Adapter<ComicTypeAdapter.Comi
     private IComicType listener;
     private boolean checkBoxIsVisible;
 
-    private List<String> mData = new ArrayList<>();
+    private List<ComicTypeBean> mData = new ArrayList<>();
 
     public ComicTypeAdapter(Context context,IComicType listener){
         this.context = context;
         this.listener = listener;
     }
 
-    public List<String> getmData() {
+    public List<ComicTypeBean> getmData() {
         return mData;
     }
 
-    public void setData(List<String> mData) {
+    public void setmData(List<ComicTypeBean> mData) {
         this.mData = mData;
-
     }
 
     public boolean isCheckBoxIsVisible() {
@@ -56,7 +56,7 @@ public class ComicTypeAdapter extends RecyclerView.Adapter<ComicTypeAdapter.Comi
 
     @Override
     public void onBindViewHolder(ComicTypeViewHolder holder,final int position) {
-        holder.tv.setText(mData.get(position));
+        holder.tv.setText(mData.get(position).getComicTypeName());
         if(checkBoxIsVisible)
             holder.itemDeleteBtn.setVisibility(View.VISIBLE);
         else

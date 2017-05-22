@@ -7,16 +7,19 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
@@ -26,17 +29,20 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.awesoman.owo2_comic.model.ComicTypeBean;
+import com.example.awesoman.owo2_comic.utils.MyLogger;
 import com.example.awesoman.owo2_comic.view.CircleBorderView;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.MainActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.AddIntoAdapter;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicAdapter;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicTypeAdapter;
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.utils.LogUtil;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -69,8 +75,9 @@ public class ComicLocalFragment extends Fragment
     @Bind(R.id.editCheckImg)
     public ImageView editCheckImg;
     @Bind(R.id.addTypeBtn)
-    ImageView addTypeBtn;
+    LinearLayout addTypeBtn;
 
+    EditText addComicTypeEditTxt;
     Dialog addTypeDialog = null;
     Dialog addInToDialog = null;
     /**  - - - - - - - - -    控件部分 结束  - - - - - - - - - */
@@ -80,7 +87,7 @@ public class ComicLocalFragment extends Fragment
     //漫画名List
     private List<String> comicNameList = null;
     //漫画种类List
-    private List<String> comicTypeList = null;
+    private List<ComicTypeBean> comicTypeList = null;
     //漫画实体类List  当前种类下的漫画List
     private List<ComicBean> comicHomeList = null;
     //需要删除的漫画list
@@ -100,6 +107,16 @@ public class ComicLocalFragment extends Fragment
 
 
     /**  - - - - - - - - -    定量部分 结束  - - - - - - - - - */
+
+    public static String TAG = "ComicLocalFragment";
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
+        comicHomeAdapter.notifyDataSetChanged();
+    }
+
     /**  - - - - - - - - -    定量部分 结束  - - - - - - - - - */
 
 
@@ -127,16 +144,18 @@ public class ComicLocalFragment extends Fragment
 
         //获取漫画种类List
         comicTypeList = fileManager.getComicTypeFromDB();
-        comicTypeList.add(0,"全部");
+        MyLogger.ddLog(TAG).i(new Gson().toJson(comicTypeList));
+//        comicTypeList.add(0,"全部");
 
         //当前种类下的  漫画list
         if(comicTypeList !=null&& comicTypeList.size()!=0) {
-            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0));
+            MyLogger.ddLog(TAG).i(comicTypeList.get(0).getComicTypeNo());
+            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
         }
 
         //设置适配器
         comicHomeAdapter.setData(comicHomeList);
-        comicTypeAdapter.setData(comicTypeList);
+        comicTypeAdapter.setmData(comicTypeList);
 
         //设置recyclerView
         RecyclerView.LayoutManager comicTypeLM = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
@@ -197,7 +216,7 @@ public class ComicLocalFragment extends Fragment
                         scanFileAndRefreshDB();
                         //当前种类下的  漫画list
                         if(comicTypeList !=null&& comicTypeList.size()!=0) {
-                            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0));
+                            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
                         }
                         //设置适配器
                         comicHomeAdapter.setData(comicHomeList);
@@ -276,7 +295,8 @@ public class ComicLocalFragment extends Fragment
                 public void onAnimationEnd(Animator animation) {
                     comicTypeRvLinear.setVisibility(View.VISIBLE);
                     // 2动画
-                    cbv.clickAnimation();
+                    cbv.clickAnimation(true);
+                    cbv.setExpand(true);
                 }
 
                 @Override
@@ -351,7 +371,8 @@ public class ComicLocalFragment extends Fragment
             set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    cbv.clickAnimation();
+                    cbv.clickAnimation(false);
+                    cbv.setExpand(false);
                 }
 
                 @Override
@@ -387,15 +408,17 @@ public class ComicLocalFragment extends Fragment
     public void onComicTypeDelete(int position) {
         LogUtil.i("onComicTypeDelete",position+"");
         comicTypeAdapter.notifyItemRemoved(position);
-        fileManager.deleteComicType(comicTypeList.get(position));
+        fileManager.deleteComicTypeByName(comicTypeList.get(position).getComicTypeName());
         comicTypeList.remove(position);
     }
 
     @Override
     public void onComicTypeItemClick(int position) {
         LogUtil.i("onComicTypeItemClick",position+"");
-        typeTxt.setText(comicTypeList.get(position));
+        typeTxt.setText(comicTypeList.get(position).getComicTypeName());
         comicType = position;
+        comicHomeList =fileManager.getComicMenuFromDB(position+1);
+
     }
 
 
@@ -403,13 +426,12 @@ public class ComicLocalFragment extends Fragment
      * 弹出添加漫画种类Dialog
      */
     public void initAddTypeNameDialog(){
-        addTypeDialog = new AlertDialog.Builder(getContext()).create();
-        addTypeDialog.show();
+/*        addTypeDialog = new AlertDialog.Builder(getContext()).create();
         Window window = addTypeDialog.getWindow();
         window.setContentView(R.layout.dialog_add_comic_type);
         Button btnOk = (Button)window.findViewById(R.id.btn_ok);
         Button btnCancel = (Button)window.findViewById(R.id.btn_cancel);
-        final EditText addComicTypeEditTxt = (EditText)window.findViewById(R.id.addComicTypeEditTxt);
+        addComicTypeEditTxt = (EditText)window.findViewById(R.id.addComicTypeEditTxt);
         View.OnClickListener dialogClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -430,6 +452,52 @@ public class ComicLocalFragment extends Fragment
         };
         btnOk.setOnClickListener(dialogClickListener);
         btnCancel.setOnClickListener(dialogClickListener);
+        StringUtils.showInputMethod(getContext(),addComicTypeEditTxt);
+        addTypeDialog.show();*/
+
+
+
+        addTypeDialog = new Dialog(getContext(), R.style.customDialog);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_add_comic_type, null);
+        final int cFullFillWidth = 10000;
+        layout.setMinimumWidth(cFullFillWidth);
+
+        Button btnOk = (Button)layout.findViewById(R.id.btn_ok);
+        Button btnCancel = (Button)layout.findViewById(R.id.btn_cancel);
+        addComicTypeEditTxt = (EditText)layout.findViewById(R.id.addComicTypeEditTxt);
+
+        View.OnClickListener dialogClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = v.getId();
+                switch (id){
+                    case R.id.btn_ok:
+                        fileManager.addComicType(addComicTypeEditTxt.getText().toString());
+                        comicTypeList = fileManager.getComicTypeFromDB();
+                        comicTypeAdapter.setmData(comicTypeList);
+                        comicTypeAdapter.notifyDataSetChanged();
+                        initAddComicInToTypeDialog(addComicTypeEditTxt.getText().toString());
+//                        comicTypeRV.scro
+                    case R.id.btn_cancel:
+                        addTypeDialog.dismiss();
+                        break;
+                }
+            }
+        };
+        btnOk.setOnClickListener(dialogClickListener);
+        btnCancel.setOnClickListener(dialogClickListener);
+
+        Window w = addTypeDialog.getWindow();
+        WindowManager.LayoutParams lp = w.getAttributes();
+        lp.x = 0;
+        final int cMakeBottom = -1000;
+        lp.y = 0;
+        lp.gravity = Gravity.CENTER;
+        addTypeDialog.onWindowAttributesChanged(lp);
+        addTypeDialog.setContentView(layout);
+        addTypeDialog.setCanceledOnTouchOutside(true);
+        addTypeDialog.show();
     }
 
     public void showDialog(){
@@ -439,6 +507,7 @@ public class ComicLocalFragment extends Fragment
             }
             else{
                 initAddTypeNameDialog();
+
             }
         }
         else{
@@ -447,7 +516,7 @@ public class ComicLocalFragment extends Fragment
     }
 
     /**
-     * 弹出添加漫画种类Dialog
+     * 弹出添加漫画到种类下 的 Dialog
      */
     public void initAddComicInToTypeDialog(final String type){
         addInToDialog = new AlertDialog.Builder(getContext()).create();
@@ -458,7 +527,8 @@ public class ComicLocalFragment extends Fragment
         Button btnCancel = (Button)window.findViewById(R.id.btn_cancel);
         final ListView listView = (ListView)window.findViewById(R.id.comicChoseList);
         final AddIntoAdapter adapter = new AddIntoAdapter(getContext());
-        List<ComicBean> comicAll = fileManager.getComicMenuFromDB(comicTypeList.get(0));
+        //所有漫画
+        List<ComicBean> comicAll = fileManager.getComicMenuFromDB(1);
         adapter.setData(comicAll);
         listView.setAdapter(adapter);
         View.OnClickListener dialogClickListener = new View.OnClickListener() {
@@ -471,7 +541,7 @@ public class ComicLocalFragment extends Fragment
                         for(int i = 0;i< chose.size();i++){
                             LogUtil.i("chose_"+i,chose.get(i).getComicName());
                         }
-//                        fileManager.updateComicType(chose,type);
+                        fileManager.updateComicType(chose,type);
                     case R.id.btn_cancel:
                         addInToDialog.dismiss();
                         break;
@@ -482,4 +552,9 @@ public class ComicLocalFragment extends Fragment
         btnCancel.setOnClickListener(dialogClickListener);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyLogger.ddLog(TAG).i("ComicLocalFragment onDestroy");
+    }
 }

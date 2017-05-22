@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.view.ImageControl;
@@ -75,6 +76,7 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
                 holder.imageView.setImageBitmap(bitmap);
             }
         }.execute();
+        holder.tv_page_index.setText((position+1)+"");
         pageIndex = position;
     }
 
@@ -87,8 +89,10 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.iv);
+            tv_page_index = (TextView)itemView.findViewById(R.id.tv_page_index);
         }
         ImageView imageView;
+        TextView tv_page_index;
     }
 
 }

@@ -10,10 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.bean.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
@@ -72,7 +71,7 @@ public class ComicChapterActivity extends BaseActivity
 
             @Override
             protected void onPostExecute(Object o) {
-                RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ComicChapterActivity.this,3);
+                RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ComicChapterActivity.this,4);
                 chapterContainer.setLayoutManager(layoutManager);
                 chapterContainer.setAdapter(adapter);
             }

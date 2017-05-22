@@ -5,6 +5,7 @@
     android:orientation="vertical"
 
     tools:context="com.example.awesoman.owo2_comic.ui.ComicLocal.ComicLocalFragment">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/comic_type_rv_height"
@@ -14,70 +15,79 @@
             android:id="@+id/cbv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="20dp" />
 
         <LinearLayout
+            android:id="@+id/comicTypeLinear"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:id="@+id/comicTypeLinear">
+            android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/typeTxt"
+                style="@style/ComicTypeStyle"
                 android:layout_width="60dp"
-                android:text="全部"
                 android:layout_marginLeft="10dp"
-                style="@style/ComicTypeStyle"/>
+                android:text="全部" />
+
             <ImageView
                 android:id="@+id/moreImg"
                 android:layout_width="6dp"
                 android:layout_height="30dp"
-                android:background="@drawable/more_bg"/>
+                android:background="@drawable/more_bg" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/comicTypeRvLinear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/comicTypeRvLinear"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="50dp"
-            android:visibility="gone"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/white"/>
+                android:background="@color/white" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/comicTypeRV"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                />
-            <ImageView
-                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:overScrollMode="never" />
+
+            <LinearLayout
                 android:id="@+id/addTypeBtn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
-                android:background="@drawable/add_type_btn"
-                android:layout_width="18dp"
-                android:layout_height="18dp" />
+                android:gravity="center|right"
+                android:layout_marginLeft="20dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/add_type_btn" />
+            </LinearLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/editCheckImg"
-            android:background="@drawable/edit_check_bg"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_width="@dimen/comic_edit_check_wh"
             android:layout_height="@dimen/comic_edit_check_wh"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/comic_edit_margin_right"
-            />
+            android:background="@drawable/edit_check_bg" />
     </RelativeLayout>
-        <android.support.v7.widget.RecyclerView
-            android:layout_weight="1"
-            android:id="@+id/comicHomeRV"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            >
-        </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comicHomeRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
 </LinearLayout>

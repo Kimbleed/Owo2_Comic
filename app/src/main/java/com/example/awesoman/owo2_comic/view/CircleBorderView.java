@@ -21,12 +21,15 @@ import android.view.animation.AccelerateInterpolator;
 
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.utils.LogUtil;
+import com.example.awesoman.owo2_comic.utils.MyLogger;
 
 /**
  * Created by Awesome on 2017/2/21.
  */
 
 public class CircleBorderView extends View {
+
+    public static final String TAG = "CircleBorderView";
 
     private float widthContainer,heightContainer,//容器宽高
             xCircle,yCircle,//圆心
@@ -35,11 +38,12 @@ public class CircleBorderView extends View {
 
     private int duration;
 
+    private boolean isExpand;
+
 //    private ShapeDrawable shapeDrawable = null;
 
     private Paint paint = null;
 
-    private boolean flag = true;
 
     public CircleBorderView(Context context) {
         super(context);
@@ -51,6 +55,14 @@ public class CircleBorderView extends View {
 
     public CircleBorderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public boolean isExpand() {
+        return isExpand;
+    }
+
+    public void setExpand(boolean expand) {
+        isExpand = expand;
     }
 
     @Override
@@ -65,14 +77,29 @@ public class CircleBorderView extends View {
         heightContainer = this.getHeight();
         xCircle = widthContainer/8;
         yCircle = heightContainer/2;
-        radiusCircle = widthContainer/6;
-        radiusStart = radiusCircle;
+
+        radiusStart = widthContainer/6;
         radiusEnd = widthContainer*4/5;
+
+        if(isExpand) {
+            MyLogger.ddLog(TAG).i("isExpand is true");
+            radiusCircle = radiusEnd;
+            paint = new Paint();
+            paint.setColor(getResources().getColor(R.color.redUndeep));
+            paint.setAntiAlias(true);
+        }
+        else{
+            MyLogger.ddLog(TAG).i("isExpand is false");
+            radiusCircle = radiusStart;
+            paint = new Paint();
+            paint.setColor(getResources().getColor(R.color.red));
+            paint.setAntiAlias(true);
+        }
+
+//        radiusCircle = radiusStart;
         duration = 300;
 
-        paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.red));
-        paint.setAntiAlias(true);
+
 
         LogUtil.i("cenjunhuiInit","onMeasure");
         LogUtil.i("cenjunhuiInit",getWidth()+"");
@@ -87,13 +114,14 @@ public class CircleBorderView extends View {
         LogUtil.i("cenjunhuiOnDraw",yCircle+"");
         LogUtil.i("cenjunhuiOnDraw",radiusCircle+"");
         LogUtil.i("cenjunhuiOnDraw",paint.getColor()+"");
-        if(radiusCircle <1.0f)
+        if(radiusCircle <1.0f) {
             init();
+        }
         canvas.drawCircle(xCircle,yCircle,radiusCircle,paint);
         canvas.restore();
     }
 
-    public void clickAnimation(){
+    public void clickAnimation(boolean flag){
         if(flag) {
             ValueAnimator bgAni = ObjectAnimator.ofFloat(this, "radiusCircle", radiusStart, radiusEnd);
             bgAni.setInterpolator(new AccelerateInterpolator());
@@ -138,7 +166,6 @@ public class CircleBorderView extends View {
             set.play(bgAni).with(colorAni);
             set.start();
         }
-        flag = !flag;
     }
 
     public float getRadiusCircle() {

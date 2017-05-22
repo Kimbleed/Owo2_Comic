@@ -10,7 +10,7 @@ import java.util.Hashtable;
 
 public class MyLogger
 {
-    private  static boolean				          logFlag			       = false;
+    private  static boolean				          logFlag			       = true;
 
     public static String                             TAG				       = "Loock";
     private final static int					       logLevel		       = Log.VERBOSE;

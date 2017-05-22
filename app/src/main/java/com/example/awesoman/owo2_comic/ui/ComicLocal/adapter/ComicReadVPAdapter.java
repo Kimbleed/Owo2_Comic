@@ -7,11 +7,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
+import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.utils.MyImageLoader;
 import com.example.awesoman.owo2_comic.view.ImageControl;
 
@@ -29,6 +34,7 @@ public class ComicReadVPAdapter extends PagerAdapter {
 
     public ComicReadVPAdapter(Context context) {
         this.CTX = context;
+        inflater = LayoutInflater.from(context);
         screenW = ((Activity)context).getWindowManager().getDefaultDisplay().getWidth();
         screenH = ((Activity)context).getWindowManager().getDefaultDisplay().getHeight();
         Rect frame = new Rect();
@@ -40,6 +46,7 @@ public class ComicReadVPAdapter extends PagerAdapter {
     private List<String> pages;
     Context CTX;
     private int pageIndex;
+    private LayoutInflater inflater ;
 
     private int screenW;
     private int screenH;
@@ -81,7 +88,10 @@ public class ComicReadVPAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        final ImageControl view = new ImageControl(container.getContext());
+         View convertView = inflater.inflate(R.layout.item_comic_read_list,null);
+//        final ImageControl view = new ImageControl(container.getContext());
+        final ImageControl view = (ImageControl) convertView.findViewById(R.id.iv);
+        TextView tv_page_index = (TextView)convertView.findViewById(R.id.tv_page_index);
 //            view.setImageBitmap(imageLoader.getBitmapByPath(chapterPath+File.separator+pages));
 
         view.setClickable(true);
@@ -111,10 +121,11 @@ public class ComicReadVPAdapter extends PagerAdapter {
                 view.setImageBitmap(bitmap);
             }
         }.execute();
-        container.addView(view);
+        container.addView(convertView);
         pageIndex = position;
+        tv_page_index.setText((pageIndex+1)+"");
 
-        return view;
+        return convertView;
     }
 
     @Override

@@ -22,7 +22,7 @@ import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.view.MusicPlayingView;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.ui.MainActivity;
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
 
 import java.util.ArrayList;

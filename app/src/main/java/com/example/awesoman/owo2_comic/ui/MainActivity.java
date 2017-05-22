@@ -14,13 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.sqlite.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
+import com.example.awesoman.owo2_comic.storage.Constants;
 import com.example.awesoman.owo2_comic.ui.ComicOnline.ComicOnlineFragment;
 import com.example.awesoman.owo2_comic.ui.Music.MusicFragment;
 import com.example.awesoman.owo2_comic.ui.Setting.SettingFragment;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.ComicLocalFragment;
+import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.utils.FileUtils;
 import com.example.awesoman.owo2_comic.utils.LogUtil;
+import com.example.awesoman.owo2_comic.utils.SPUtil;
 
 import java.io.File;
 
@@ -49,9 +52,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initView() {
 
-        //请求写文件权限
-        ActivityCompat.requestPermissions(this, new String[]{android
-                .Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        boolean isFirstAsk = (boolean) SPUtil.getInstance(this).get(Constants.FIRST_REQUEST_FILE_PERMISSION, true);
+        if(isFirstAsk) {
+            FileManager.getInstance().addComicType("全部");
+            SPUtil.getInstance(this).put(Constants.FIRST_REQUEST_FILE_PERMISSION, false);
+            //请求写文件权限
+            ActivityCompat.requestPermissions(this, new String[]{android
+                    .Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
 
         myViewPager.setAdapter(fragmentPagerAdapter);
         for (LinearLayout ll : btnViews) {

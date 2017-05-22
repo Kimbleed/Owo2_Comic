@@ -1,4 +1,4 @@
-package com.example.awesoman.owo2_comic.bean;
+package com.example.awesoman.owo2_comic.model;
 
 import java.io.Serializable;
 
@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class ComicBean implements Serializable{
     String comicName;
     String comicPath;
+    String comicType;
 
     public String getComicName() {
         return comicName;
@@ -24,5 +25,13 @@ public class ComicBean implements Serializable{
 
     public void setComicPath(String comicPath) {
         this.comicPath = comicPath;
+    }
+
+    public void setComicType(String comicType) {
+        this.comicType = comicType;
+    }
+
+    public String getComicType() {
+        return comicType;
     }
 }
