@@ -44,6 +44,7 @@ import com.example.awesoman.owo2_comic.utils.LogUtil;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -89,7 +90,7 @@ public class ComicLocalFragment extends Fragment
     //漫画种类List
     private List<ComicTypeBean> comicTypeList = null;
     //漫画实体类List  当前种类下的漫画List
-    private List<ComicBean> comicHomeList = null;
+    private List<ComicBean> comicHomeList = new ArrayList<>();
     //需要删除的漫画list
     private List<String> listDelete;
     //文件管理类
@@ -113,7 +114,12 @@ public class ComicLocalFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
+        comicHomeList.clear();
+        MyLogger.ddLog(TAG).i("onResume typeTxt->>" + typeTxt.getText().toString());
+        MyLogger.ddLog(TAG).i("onResume comicTypeId->>" + fileManager.getComicTypeIdByName(typeTxt.getText().toString()));
+//        comicHomeList.addAll(fileManager.getComicMenuFromDB(Integer.parseInt(fileManager.getComicTypeIdByName(typeTxt.getText().toString()))));
+        comicHomeList.addAll(fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo()));
+        MyLogger.ddLog(TAG).i("onResume comicHomeList->>" + new Gson().toJson(comicHomeList));
         comicHomeAdapter.notifyDataSetChanged();
     }
 
@@ -146,12 +152,6 @@ public class ComicLocalFragment extends Fragment
         comicTypeList = fileManager.getComicTypeFromDB();
         MyLogger.ddLog(TAG).i(new Gson().toJson(comicTypeList));
 //        comicTypeList.add(0,"全部");
-
-        //当前种类下的  漫画list
-        if(comicTypeList !=null&& comicTypeList.size()!=0) {
-            MyLogger.ddLog(TAG).i(comicTypeList.get(0).getComicTypeNo());
-            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
-        }
 
         //设置适配器
         comicHomeAdapter.setData(comicHomeList);
@@ -216,10 +216,10 @@ public class ComicLocalFragment extends Fragment
                         scanFileAndRefreshDB();
                         //当前种类下的  漫画list
                         if(comicTypeList !=null&& comicTypeList.size()!=0) {
-                            comicHomeList = fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo());
+                            comicHomeList.clear();
+                            comicHomeList.addAll( fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo()));
                         }
                         //设置适配器
-                        comicHomeAdapter.setData(comicHomeList);
                         comicHomeAdapter.notifyDataSetChanged();
 
                     comicHomeAdapter.setAllCheck(false);
@@ -417,7 +417,9 @@ public class ComicLocalFragment extends Fragment
         LogUtil.i("onComicTypeItemClick",position+"");
         typeTxt.setText(comicTypeList.get(position).getComicTypeName());
         comicType = position;
-        comicHomeList =fileManager.getComicMenuFromDB(position+1);
+        comicHomeList.clear();
+        comicHomeList.addAll(fileManager.getComicMenuFromDB(comicTypeList.get(position).getComicTypeNo()));
+        comicHomeAdapter.notifyDataSetChanged();
 
     }
 

@@ -72,10 +72,6 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
     }
 
     public void setData(List<ComicBean> mData) {
-        checkBoxList.clear();
-        for(int i =0;i<mData.size();i++){
-            checkBoxList.add(false);
-        }
         this.mData = mData;
     }
 
@@ -123,6 +119,10 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
 
     @Override
     public int getItemCount() {
+        checkBoxList.clear();
+        for(int i =0;i<mData.size();i++){
+            checkBoxList.add(false);
+        }
         return mData.size();
     }
 
