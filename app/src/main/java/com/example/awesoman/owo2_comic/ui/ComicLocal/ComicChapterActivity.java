@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 
@@ -17,7 +15,6 @@ import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
-import com.example.awesoman.owo2_comic.view.CustomTitlebar;
 
 import butterknife.Bind;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -60,8 +57,9 @@ public class ComicChapterActivity extends BaseActivity
             protected Object doInBackground(Object[] params) {
                 adapter = new ComicChapterAdapter(ComicChapterActivity.this,ComicChapterActivity.this);
                 adapter.setmData(comicDBManager.getChapterList(comicBean.getComicPath()));
-                adapter.setTitle(comicBean.getComicName());
-                adapter.setSurPath(comicBean.getComicPath());
+                adapter.setmTitle(comicBean.getComicName());
+                adapter.setmType( comicBean.getComicType());
+                adapter.setmSurPath(comicBean.getComicPath());
                 return null;
             }
 
@@ -128,16 +126,10 @@ public class ComicChapterActivity extends BaseActivity
         ptrLayout.setPtrHandler(new PtrDefaultHandler2() {
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
-                Log.i("onLoadMoreBegin","here");
-//                getVideos(cloudAlbumAdapter.mData.size()/10+1);
-//                ptrLayout.refreshComplete();
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                Log.i("onRefreshBegin","here");
-//                getVideos(1);
-//                ptrLayout.refreshComplete();
             }
         });
 

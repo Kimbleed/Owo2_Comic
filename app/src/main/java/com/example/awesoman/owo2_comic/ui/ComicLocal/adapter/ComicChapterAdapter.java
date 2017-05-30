@@ -25,8 +25,9 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     List<String> mData = new ArrayList<>();
     IComicChapterListener IComicChapterListener;
-    private String title ;
-    private String surPath;
+    private String mTitle;
+    private String mSurPath;
+    private String mType;
 
 
     public static final String Chapter[] = new String[]{"卷","章","话"};
@@ -59,20 +60,28 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mData = mData;
     }
 
-    public String getTitle() {
-        return title;
+    public String getmTitle() {
+        return mTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
     }
 
-    public String getSurPath() {
-        return surPath;
+    public String getmSurPath() {
+        return mSurPath;
     }
 
-    public void setSurPath(String surPath) {
-        this.surPath = surPath;
+    public void setmSurPath(String mSurPath) {
+        this.mSurPath = mSurPath;
+    }
+
+    public String getmType() {
+        return mType;
+    }
+
+    public void setmType(String mType) {
+        this.mType = mType;
     }
 
     @Override
@@ -108,7 +117,9 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
         else{
-            Bitmap bitmap =comicDBManager.getSurface(surPath);
+            Bitmap bitmap =comicDBManager.getSurface(mSurPath);
+            ((ComicChapterHeadViewHolder)holder).tv_comic_name.setText(mTitle);
+            ((ComicChapterHeadViewHolder)holder).tv_comic_type.setText("种类:"+FileManager.getInstance().getComicTypeNameById(Integer.parseInt(mType)));
             ((ComicChapterHeadViewHolder)holder).iv_comic_face.setImageBitmap(comicDBManager.makeSurface(bitmap,CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
         }
     }
@@ -131,10 +142,12 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             this.iv_comic_face = (ImageView )itemView.findViewById(R.id.iv_comic_face);
             this.tv_comic_name = (TextView)itemView.findViewById(R.id.tv_comic_name);
+            this.tv_comic_type = (TextView)itemView.findViewById(R.id.tv_comic_type);
         }
 
         ImageView iv_comic_face;
         TextView tv_comic_name;
+        TextView tv_comic_type;
     }
 
     public String cutOutName(String comicName){

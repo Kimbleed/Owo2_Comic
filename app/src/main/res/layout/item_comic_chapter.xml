@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_200"
+    android:background="@color/grey_100"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
+    android:padding="10dp"
    >
     <TextView
         android:id="@+id/tv_chapter"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/font_32"
+        android:layout_height="@dimen/font_38"
         android:gravity="center"
-        android:textColor="@color/red"
+        android:textColor="@color/black_alpha_128"
         android:textSize="@dimen/font_16"
-        android:background="@drawable/shape_selector"/>
+        android:background="@drawable/shape_selector"
+        android:text="名字"/>
 </LinearLayout>

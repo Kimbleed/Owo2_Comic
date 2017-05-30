@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="title"
+        android:text="mTitle"
         android:textColor="@color/gray"
         android:textSize="@dimen/font_28" />
 
