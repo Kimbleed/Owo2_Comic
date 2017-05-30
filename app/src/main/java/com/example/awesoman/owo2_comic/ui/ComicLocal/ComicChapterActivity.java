@@ -5,19 +5,24 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
+import com.example.awesoman.owo2_comic.utils.FastBlur;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.SkipUtil;
+import com.example.awesoman.owo2_comic.view.CustomTitlebar;
 
 import butterknife.Bind;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler2;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by Awesome on 2016/11/5.
@@ -25,18 +30,14 @@ import butterknife.Bind;
  */
 
 public class ComicChapterActivity extends BaseActivity
-        implements ComicChapterAdapter.Listener, View.OnClickListener{
+        implements ComicChapterAdapter.IComicChapterListener{
 
+    @Bind(R.id.iv_bg)
+    ImageView iv_bg;
     @Bind(R.id.chapter_container)
     RecyclerView chapterContainer;
-    @Bind(R.id.iv_comic_face)
-    ImageView comicSurfaceIV;
-    @Bind(R.id.tv_comic_name)
-    TextView comicNameTxt;
-    @Bind(R.id.backBtn)
-    ImageView backBtn;
-    @Bind(R.id.titleTxt)
-    TextView titleTxt;
+    @Bind(R.id.ptr)
+    PtrClassicFrameLayout ptrLayout;
 
     FileManager comicDBManager ;
     ComicBean comicBean;
@@ -48,34 +49,45 @@ public class ComicChapterActivity extends BaseActivity
         comicBean =(ComicBean) getIntent().getSerializableExtra("comicBean");
         //实例化ComicDBManager
         comicDBManager =FileManager.getInstance();
-        comicNameTxt.setText(comicBean.getComicName());
-
-        Bitmap bitmap =comicDBManager.getSurface(comicBean.getComicPath());
-        comicSurfaceIV.setImageBitmap(comicDBManager.makeSurface(bitmap,getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
-
-        comicSurfaceIV.setOnClickListener(this);
-        backBtn.setOnClickListener(this);
-        titleTxt.setText(comicBean.getComicName());
-        titleTxt.setTextColor(getResources().getColor(R.color.white));
         showChapter();
+        initPtr();
+        setBg();
     }
 
     public void showChapter(){
         new AsyncTask(){
             @Override
             protected Object doInBackground(Object[] params) {
-                adapter = new ComicChapterAdapter(ComicChapterActivity.this);
+                adapter = new ComicChapterAdapter(ComicChapterActivity.this,ComicChapterActivity.this);
                 adapter.setmData(comicDBManager.getChapterList(comicBean.getComicPath()));
+                adapter.setTitle(comicBean.getComicName());
+                adapter.setSurPath(comicBean.getComicPath());
                 return null;
             }
 
             @Override
             protected void onPostExecute(Object o) {
-                RecyclerView.LayoutManager layoutManager = new GridLayoutManager(ComicChapterActivity.this,4);
+                GridLayoutManager layoutManager = new GridLayoutManager(ComicChapterActivity.this,3);
+                GridLayoutManager.SpanSizeLookup bbb = new GridLayoutManager.SpanSizeLookup(){
+                    @Override
+                    public int getSpanSize(int position) {
+                        return adapter.getItemViewType(position);
+                    }
+                };
+                layoutManager.setSpanSizeLookup(bbb);
                 chapterContainer.setLayoutManager(layoutManager);
                 chapterContainer.setAdapter(adapter);
             }
         }.execute();
+    }
+
+    public void setBg(){
+        //获取图片
+        Bitmap bitmap =comicDBManager.getSurface(comicBean.getComicPath());
+        //截取图片
+        bitmap = comicDBManager.makeSurface(bitmap,CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height));
+        //模糊处理
+        iv_bg.setImageBitmap(FastBlur.doBlur(bitmap,50,false));
     }
 
     @Override
@@ -92,24 +104,42 @@ public class ComicChapterActivity extends BaseActivity
     }
 
     @Override
+    public void onSurClick() {
+        Intent intent = new Intent();
+        intent.setClass(this,ChooseChapterActivity.class);
+        intent.putExtra("comicBean",comicBean);
+        SkipUtil.skip(this, intent,false);
+    }
+
+    @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch(id){
-            case R.id.backBtn:
-                finish();
-                break;
-            case R.id.iv_comic_face:
-                Intent intent = new Intent();
-                intent.setClass(this,ChooseChapterActivity.class);
-                intent.putExtra("comicBean",comicBean);
-                SkipUtil.skip(this, intent,false);
-                break;
-        }
+    public void initPtr(){
+        ptrLayout.setLastUpdateTimeRelateObject(this);
+//        ptrLayout.setBackgroundResource((R.color.white));
+        ptrLayout.setDurationToCloseHeader(1000);
+        ImageView head = new ImageView(this);
+        ptrLayout.setHeaderView(head);
+        ImageView foot = new ImageView(this);
+        ptrLayout.setFooterView(foot);
+        ptrLayout.setPtrHandler(new PtrDefaultHandler2() {
+            @Override
+            public void onLoadMoreBegin(PtrFrameLayout frame) {
+                Log.i("onLoadMoreBegin","here");
+//                getVideos(cloudAlbumAdapter.mData.size()/10+1);
+//                ptrLayout.refreshComplete();
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                Log.i("onRefreshBegin","here");
+//                getVideos(1);
+//                ptrLayout.refreshComplete();
+            }
+        });
+
     }
 }

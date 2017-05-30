@@ -121,6 +121,7 @@ public class ComicLocalFragment extends Fragment
         comicHomeList.addAll(fileManager.getComicMenuFromDB(comicTypeList.get(0).getComicTypeNo()));
         MyLogger.ddLog(TAG).i("onResume comicHomeList->>" + new Gson().toJson(comicHomeList));
         comicHomeAdapter.notifyDataSetChanged();
+        comicTypeIsShowing = cbv.isExpand();
     }
 
     /**  - - - - - - - - -    定量部分 结束  - - - - - - - - - */
@@ -395,6 +396,7 @@ public class ComicLocalFragment extends Fragment
         comicTypeIsShowing = !comicTypeIsShowing;
 
     }
+
 
     @Override
     public void onComicHomeItemClick(int position) {

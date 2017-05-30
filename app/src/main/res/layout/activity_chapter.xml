@@ -1,49 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/iv_bg"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/comic_type_rv_height"
-        android:background="@color/red">
-        <include layout="@layout/title_layout"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_comic_face"
-            android:layout_width="120dp"
-            android:layout_height="150dp"
-            android:background="@color/colorPrimary" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:id="@+id/tv_comic_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="漫画名"
-                android:textSize="23dp"></TextView>
-        </LinearLayout>
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/chapter_container"
+        android:layout_height="400dp"
+        android:scaleType="fitXY"
+        />
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/ptr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"></android.support.v7.widget.RecyclerView>
-</LinearLayout>
+        android:overScrollMode="never"
+        >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/chapter_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    ></android.support.v7.widget.RecyclerView>
+
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+</RelativeLayout>
