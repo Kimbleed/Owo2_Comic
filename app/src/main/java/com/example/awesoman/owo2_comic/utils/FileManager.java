@@ -7,12 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.nfc.Tag;
 import android.util.Log;
 
 import com.example.awesoman.owo2_comic.application.MyApplication;
-import com.example.awesoman.owo2_comic.model.ComicBean;
-import com.example.awesoman.owo2_comic.model.ComicTypeBean;
+import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.model.ComicTypeInfo;
 import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.storage.MySQLiteHelper;
 import com.google.gson.Gson;
@@ -175,8 +174,8 @@ public class FileManager {
      * 获取数据库中所有漫画种类
      *
      */
-    public List<ComicTypeBean> getComicTypeFromDB(){
-        List<ComicTypeBean > data = new ArrayList<>();
+    public List<ComicTypeInfo> getComicTypeFromDB(){
+        List<ComicTypeInfo> data = new ArrayList<>();
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
 
@@ -187,7 +186,7 @@ public class FileManager {
             MyLogger.ddLog(TAG).i("ComicType size is more than 0");
             cursor.moveToFirst();
             do {
-                ComicTypeBean bean = new ComicTypeBean();
+                ComicTypeInfo bean = new ComicTypeInfo();
                 bean.setComicTypeName(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_NAME)));
                 bean.setComicTypeNo(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ComicEntry.TYPE_COLUMNS_NAME_COMIC_No))));
                 data.add(bean);
@@ -271,7 +270,7 @@ public class FileManager {
     /**
      * 修改漫画String的种类
      */
-    public void updateComicType(ComicBean entity, String type){
+    public void updateComicType(ComicInfo entity, String type){
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         ContentValues value = new ContentValues();
@@ -282,10 +281,10 @@ public class FileManager {
     /**
      * 修改List comicList 中所有漫画 的种类 为type
      */
-    public void updateComicType(List<ComicBean> comicList, String type){
+    public void updateComicType(List<ComicInfo> comicList, String type){
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
-        for(ComicBean entity:comicList) {
+        for(ComicInfo entity:comicList) {
             ContentValues value = new ContentValues();
             value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME,entity.getComicName());
             value.put(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE,getComicTypeIdByName(type));
@@ -300,8 +299,8 @@ public class FileManager {
      * @param type typeNo
      * @return
      */
-    public List<ComicBean> getComicMenuFromDB(int type){
-        List<ComicBean> data = new ArrayList<>();
+    public List<ComicInfo> getComicMenuFromDB(int type){
+        List<ComicInfo> data = new ArrayList<>();
         SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
         SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
         String sql = "select * from "+ ComicEntry.COMIC_ALL_TABLE_NAME;
@@ -312,11 +311,11 @@ public class FileManager {
             cursor.moveToFirst();
             do {
                 Log.i("getComicMenu_cursor",cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE)));
-                ComicBean comicBean =new ComicBean();
-                comicBean.setComicName(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME)));
-                comicBean.setComicPath(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH)));
-                comicBean.setComicType(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE)));
-                data.add(comicBean);
+                ComicInfo comicInfo =new ComicInfo();
+                comicInfo.setComicName(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_NAME)));
+                comicInfo.setComicPath(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_PATH)));
+                comicInfo.setComicType(cursor.getString(cursor.getColumnIndex(ComicEntry.COMIC_ALL_COLUMNS_NAME_COMIC_TYPE)));
+                data.add(comicInfo);
             }
             while (cursor.moveToNext());
         }
@@ -354,7 +353,7 @@ public class FileManager {
 
         if(pictureListString.size()>0) {
             for (String picture : pictureListString) {
-                if (picture.equals("surface")) {
+                if (picture.contains("surface")) {
                     bitmap = BitmapFactory.decodeFile(path + File.separator + picture);
                     break;
                 }

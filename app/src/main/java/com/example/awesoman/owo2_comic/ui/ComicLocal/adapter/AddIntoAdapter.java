@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.model.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class AddIntoAdapter extends BaseAdapter {
-    List<ComicBean> data = new ArrayList<>();
+    List<ComicInfo> data = new ArrayList<>();
     LayoutInflater inflater = null;
     boolean[] flagArr =null;
 
@@ -28,13 +28,13 @@ public class AddIntoAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<ComicBean> data) {
+    public void setData(List<ComicInfo> data) {
         this.data = data;
         flagArr = new boolean[data.size()];
     }
 
-    public List<ComicBean> getChoseComicList(){
-        List<ComicBean> chose = new ArrayList<>();
+    public List<ComicInfo> getChoseComicList(){
+        List<ComicInfo> chose = new ArrayList<>();
         for(int i = 0;i<flagArr.length;i++)
             if(flagArr[i])
                 chose.add(data.get(i));

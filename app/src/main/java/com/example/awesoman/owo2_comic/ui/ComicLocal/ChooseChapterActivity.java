@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.model.ComicBean;
+import com.example.awesoman.owo2_comic.model.ComicInfo;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
@@ -32,7 +32,7 @@ public class ChooseChapterActivity extends BaseActivity
     @Bind(R.id.lv_chapter)
     ListView chapterLV;
 
-    private ComicBean comicBean;
+    private ComicInfo comicInfo;
     private ChooseChapterAdapter adapter;
     private FileManager comicDBManager;
     private List<String> chapterList ;
@@ -51,7 +51,7 @@ public class ChooseChapterActivity extends BaseActivity
         comicDBManager = FileManager.getInstance();
 
         //获取comicEntity信息
-        comicBean =(ComicBean) getIntent().getSerializableExtra("comicBean");
+        comicInfo =(ComicInfo) getIntent().getSerializableExtra("comicInfo");
         showChapter();
     }
 
@@ -60,7 +60,7 @@ public class ChooseChapterActivity extends BaseActivity
             @Override
             protected Object doInBackground(Object[] params) {
                 adapter = new ChooseChapterAdapter(ChooseChapterActivity.this);
-                chapterList = comicDBManager.getChapterList(comicBean.getComicPath());
+                chapterList = comicDBManager.getChapterList(comicInfo.getComicPath());
                 adapter.setmData(chapterList);
                 adapter.setListener(ChooseChapterActivity.this);
                 return null;
@@ -88,7 +88,7 @@ public class ChooseChapterActivity extends BaseActivity
         Intent intent = new Intent();
         intent.setClass(this,ChooseSurfaceActivity.class);
         //传入漫画下章节的地址路径
-        intent.putExtra("path",comicBean.getComicPath());
+        intent.putExtra("path", comicInfo.getComicPath());
         intent.putExtra("chapter",chapterList.get(position));
         SkipUtil.skip(this,intent,false);
     }

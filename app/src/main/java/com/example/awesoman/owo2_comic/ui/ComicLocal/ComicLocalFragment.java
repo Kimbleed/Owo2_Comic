@@ -29,12 +29,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.awesoman.owo2_comic.model.ComicTypeBean;
+import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.model.ComicTypeInfo;
 import com.example.awesoman.owo2_comic.utils.MyLogger;
 import com.example.awesoman.owo2_comic.view.CircleBorderView;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.model.ComicBean;
 import com.example.awesoman.owo2_comic.ui.MainActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.AddIntoAdapter;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicAdapter;
@@ -88,9 +88,9 @@ public class ComicLocalFragment extends Fragment
     //漫画名List
     private List<String> comicNameList = null;
     //漫画种类List
-    private List<ComicTypeBean> comicTypeList = null;
+    private List<ComicTypeInfo> comicTypeList = null;
     //漫画实体类List  当前种类下的漫画List
-    private List<ComicBean> comicHomeList = new ArrayList<>();
+    private List<ComicInfo> comicHomeList = new ArrayList<>();
     //需要删除的漫画list
     private List<String> listDelete;
     //文件管理类
@@ -401,7 +401,7 @@ public class ComicLocalFragment extends Fragment
     @Override
     public void onComicHomeItemClick(int position) {
         Intent intent = new Intent(getContext(),ComicChapterActivity.class);
-        intent.putExtra("comicBean",comicHomeList.get(position));
+        intent.putExtra("comicInfo",comicHomeList.get(position));
         SkipUtil.skip(getContext(),intent,false);
         ((MainActivity)getContext()). jumpAnimation(1);
     }
@@ -532,7 +532,7 @@ public class ComicLocalFragment extends Fragment
         final ListView listView = (ListView)window.findViewById(R.id.comicChoseList);
         final AddIntoAdapter adapter = new AddIntoAdapter(getContext());
         //所有漫画
-        List<ComicBean> comicAll = fileManager.getComicMenuFromDB(1);
+        List<ComicInfo> comicAll = fileManager.getComicMenuFromDB(1);
         adapter.setData(comicAll);
         listView.setAdapter(adapter);
         View.OnClickListener dialogClickListener = new View.OnClickListener() {
@@ -541,7 +541,7 @@ public class ComicLocalFragment extends Fragment
                 int id = v.getId();
                 switch (id){
                     case R.id.btn_ok:
-                        List<ComicBean> chose = adapter.getChoseComicList();
+                        List<ComicInfo> chose = adapter.getChoseComicList();
                         for(int i = 0;i< chose.size();i++){
                             LogUtil.i("chose_"+i,chose.get(i).getComicName());
                         }

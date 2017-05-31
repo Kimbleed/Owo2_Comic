@@ -1,15 +1,39 @@
 package com.example.awesoman.owo2_comic.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * Created by Awesome on 2016/11/7.
  */
 
-public class ComicBean implements Serializable{
+@DatabaseTable(tableName = "tb_comic")
+public class ComicInfo implements Serializable {
+
+    @DatabaseField(generatedId = true)
+    int id;
+
+    @DatabaseField(columnName = "comic_name")
     String comicName;
+
+    @DatabaseField(columnName = "comic_path")
     String comicPath;
+
+    @DatabaseField(columnName = "comic_type")
     String comicType;
+
+    public ComicInfo() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getComicName() {
         return comicName;

@@ -46,7 +46,8 @@ public class PictureUtil {
 
 
     public Bitmap cripPicture(Bitmap bitmap,int newWidth){
-        bitmap = bitmap.createBitmap(bitmap,0,0,newWidth,bitmap.getHeight());
+        if(newWidth <= bitmap.getWidth())
+            bitmap = bitmap.createBitmap(bitmap,0,0,newWidth,bitmap.getHeight());
         return bitmap;
     }
 

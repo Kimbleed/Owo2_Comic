@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.model.ComicTypeBean;
+import com.example.awesoman.owo2_comic.model.ComicTypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +24,18 @@ public class ComicTypeAdapter extends RecyclerView.Adapter<ComicTypeAdapter.Comi
     private IComicType listener;
     private boolean checkBoxIsVisible;
 
-    private List<ComicTypeBean> mData = new ArrayList<>();
+    private List<ComicTypeInfo> mData = new ArrayList<>();
 
     public ComicTypeAdapter(Context context,IComicType listener){
         this.context = context;
         this.listener = listener;
     }
 
-    public List<ComicTypeBean> getmData() {
+    public List<ComicTypeInfo> getmData() {
         return mData;
     }
 
-    public void setmData(List<ComicTypeBean> mData) {
+    public void setmData(List<ComicTypeInfo> mData) {
         this.mData = mData;
     }
 

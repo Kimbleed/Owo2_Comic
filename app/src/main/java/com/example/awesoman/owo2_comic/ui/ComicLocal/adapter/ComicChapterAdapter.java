@@ -108,11 +108,11 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(position >0) {
-            ((ComicChapterViewHolder)holder).tv.setText(cutOutName(mData.get(position)));
+            ((ComicChapterViewHolder)holder).tv.setText(cutOutName(mData.get(position-1)));
             ((ComicChapterViewHolder)holder).tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IComicChapterListener.onChapterClick(mData.get(position));
+                    IComicChapterListener.onChapterClick(mData.get(position-1));
                 }
             });
         }
@@ -126,7 +126,7 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.size()+1;
     }
 
     class ComicChapterViewHolder extends RecyclerView.ViewHolder{
