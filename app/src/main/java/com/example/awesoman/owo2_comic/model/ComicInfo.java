@@ -22,7 +22,7 @@ public class ComicInfo implements Serializable {
     String comicPath;
 
     @DatabaseField(columnName = "comic_type")
-    String comicType;
+    int comicType;
 
     public ComicInfo() {
     }
@@ -51,11 +51,11 @@ public class ComicInfo implements Serializable {
         this.comicPath = comicPath;
     }
 
-    public void setComicType(String comicType) {
+    public void setComicType(int comicType) {
         this.comicType = comicType;
     }
 
-    public String getComicType() {
+    public int getComicType() {
         return comicType;
     }
 }

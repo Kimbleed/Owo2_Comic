@@ -90,7 +90,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
     @Override
     public void onBindViewHolder(final ComicViewHolder holder, final int position) {
         holder.tv_name.setText(mData.get(position).getComicName());
-        holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(Integer.parseInt(mData.get(position).getComicType())));
+        holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(mData.get(position).getComicType()));
         holder.checkBox.setChecked(checkBoxList.get(position));
         if (!checkBoxIsVisible) {
             holder.checkBox.setVisibility(View.GONE);

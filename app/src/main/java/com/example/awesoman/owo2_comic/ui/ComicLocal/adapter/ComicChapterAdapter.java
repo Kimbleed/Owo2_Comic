@@ -119,7 +119,7 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         else{
             Bitmap bitmap =comicDBManager.getSurface(mSurPath);
             ((ComicChapterHeadViewHolder)holder).tv_comic_name.setText(mTitle);
-            ((ComicChapterHeadViewHolder)holder).tv_comic_type.setText("种类:"+FileManager.getInstance().getComicTypeNameById(Integer.parseInt(mType)));
+            ((ComicChapterHeadViewHolder)holder).tv_comic_type.setText("种类:"+mType);
             ((ComicChapterHeadViewHolder)holder).iv_comic_face.setImageBitmap(comicDBManager.makeSurface(bitmap,CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
         }
     }
@@ -166,6 +166,14 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 return stb.toString();
             }
+            else if(indexDi ==-1 && indexChapter!=-1){
+                StringBuffer stb = new StringBuffer();
+                for(int i = indexChapter-2;i<=indexChapter;i++){
+                    stb.append(comicName.charAt(i));
+                }
+                return stb.toString();
+            }
+
         }
         return comicName;
     }

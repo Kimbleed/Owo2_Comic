@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 
 import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.storage.ComicTypeInfoDao;
 import com.example.awesoman.owo2_comic.utils.DensityUtils;
 import com.example.awesoman.owo2_comic.utils.FastBlur;
 import com.example.awesoman.owo2_comic.utils.FileManager;
@@ -64,7 +65,7 @@ public class ComicChapterActivity extends BaseActivity
                 adapter = new ComicChapterAdapter(ComicChapterActivity.this, ComicChapterActivity.this);
                 adapter.setmData(comicDBManager.getChapterList(comicInfo.getComicPath()));
                 adapter.setmTitle(comicInfo.getComicName());
-                adapter.setmType(comicInfo.getComicType());
+                adapter.setmType(new ComicTypeInfoDao(CTX).getById(comicInfo.getComicType()).getComicTypeName());
                 adapter.setmSurPath(comicInfo.getComicPath());
                 return null;
             }
