@@ -27,7 +27,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by Awesome on 2016/11/5.
- * 漫画章节Activity
+ * 漫画章节ActivityC
  */
 
 public class ComicChapterActivity extends BaseActivity
@@ -118,6 +118,8 @@ public class ComicChapterActivity extends BaseActivity
         Intent intent = new Intent(this, ComicReadActivity.class);
         intent.putExtra("chapter", chapter);
         intent.putExtra("path", comicInfo.getComicPath());
+        intent.putExtra("comic_info",comicInfo);
+
         SkipUtil.skip(this, intent, false);
     }
 

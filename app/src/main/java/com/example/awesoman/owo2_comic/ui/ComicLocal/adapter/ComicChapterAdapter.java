@@ -119,8 +119,16 @@ public class ComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         else{
             Bitmap bitmap =comicDBManager.getSurface(mSurPath);
             ((ComicChapterHeadViewHolder)holder).tv_comic_name.setText(mTitle);
+
             ((ComicChapterHeadViewHolder)holder).tv_comic_type.setText("种类:"+mType);
             ((ComicChapterHeadViewHolder)holder).iv_comic_face.setImageBitmap(comicDBManager.makeSurface(bitmap,CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
+            ((ComicChapterHeadViewHolder)holder).iv_comic_face.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IComicChapterListener.onSurClick();
+                }
+            });
+
         }
     }
 

@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.example.awesoman.owo2_comic.model.ComicHistoryInfo;
+import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.storage.ComicHistoryDao;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ComicReadRVAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
@@ -61,11 +64,15 @@ public class ComicReadActivity extends BaseActivity
     private ComicReadVPAdapter comicReadVPAdapter;
     private ComicReadRVAdapter comicReadRVAdapter;
     private String chapterPath = null;
+    private String chapter;
+    private ComicInfo mComicInfo ;
     private boolean isInVisible;
 
     public static final int READ_MODE_PAGING_RIGHT = 1;
     public static final int READ_MODE_PAGING_LEFT = 2;
     public static final int READ_MODE_ROLL = 3;
+
+    private ComicHistoryDao comicHistoryDao;
 
     @Override
     public int getContentViewID() {
@@ -74,9 +81,13 @@ public class ComicReadActivity extends BaseActivity
 
     @Override
     public void initView() {
+        comicHistoryDao = new ComicHistoryDao(this);
         Bundle bundle = getIntent().getExtras();
         String path = bundle.getString("path");
-        String chapter = bundle.getString("chapter");
+        chapter = bundle.getString("chapter");
+        mComicInfo = (ComicInfo)bundle.get("comic_info");
+
+        rememberHistory(0);
 
         ////右翻页    阅读模式---------------开始
         comicReadVPAdapter = new ComicReadVPAdapter(this);
@@ -92,10 +103,10 @@ public class ComicReadActivity extends BaseActivity
         }
         comicReadVPAdapter.setPages(pages);
 
-        comicReadVPAdapter.setListener(new ComicReadVPAdapter.IDoubleClick() {
+        comicReadVPAdapter.setComicReadVPListener(new ComicReadVPAdapter.IComicReadVPListener() {
             @Override
             public void doubleClick(final boolean isBig) {
-//                Log.i("ComicReadActivity","IDoubleClick");
+//                Log.i("ComicReadActivity","IComicReadVPListener");
                 Log.i("CEN", "DoubleClick  >> HANDLER_SECOND_CLICK");
                 if (isBig) {
                     vp_read.setNoScroll(isBig);
@@ -108,6 +119,11 @@ public class ComicReadActivity extends BaseActivity
                     }, 100);
                 }
                 vp_read.mClickHandler.sendEmptyMessage(ReadComicViewPager.HANDLER_SECOND_CLICK);
+            }
+
+            @Override
+            public void pageOn(int pageIndex) {
+                rememberHistory(pageIndex);
             }
         });
 
@@ -125,6 +141,7 @@ public class ComicReadActivity extends BaseActivity
         comicReadRVAdapter.setChapterPath(chapterPath);
         comicReadRVAdapter.setPages(pages);
         rv_read.setAdapter(comicReadRVAdapter);
+
         //上下滚动  阅读模式---------------结束
 
         backBtn.setOnClickListener(this);
@@ -282,6 +299,21 @@ public class ComicReadActivity extends BaseActivity
             rv_read.setVisibility(View.VISIBLE);
             vp_read.setVisibility(View.GONE);
             showOrHideMoreSelect();
+        }
+    }
+
+    public void rememberHistory(int page){
+        ComicHistoryInfo historyInfo = comicHistoryDao.get(mComicInfo.getComicName());
+        if(historyInfo !=null){
+            historyInfo.setComicPage(page);
+            comicHistoryDao.update(historyInfo);
+        }
+        else{
+            historyInfo = new ComicHistoryInfo();
+            historyInfo.setComicChapter(chapter);
+            historyInfo.setComicPage(page);
+            historyInfo.setComicName(mComicInfo.getComicName());
+            comicHistoryDao.add(historyInfo);
         }
     }
 }

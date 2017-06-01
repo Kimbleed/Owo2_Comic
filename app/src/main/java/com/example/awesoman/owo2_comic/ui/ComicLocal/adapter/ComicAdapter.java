@@ -10,7 +10,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.awesoman.owo2_comic.model.ComicHistoryInfo;
 import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.storage.ComicHistoryDao;
 import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.utils.FileUtils;
@@ -38,10 +40,13 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
     //所有checkbox 标签
     private List<Boolean> checkBoxList = new ArrayList<>();
 
+    private ComicHistoryDao mComicHistoryDao;
+
     public ComicAdapter(Context context, IComicHome listener) {
         this.listener = listener;
         comicDBManager = FileManager.getInstance();
         this.context = context;
+        mComicHistoryDao = new ComicHistoryDao(context);
     }
 
     //获取 checkbox为ture的 漫画名List
@@ -92,9 +97,16 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         holder.tv_name.setText(mData.get(position).getComicName());
         holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(mData.get(position).getComicType()));
         holder.checkBox.setChecked(checkBoxList.get(position));
+        ComicHistoryInfo historyInfo =mComicHistoryDao.get(mData.get(position).getComicName());
+        if(historyInfo!=null) {
+            holder.tv_history.setText(historyInfo.getComicChapter() + "||" + historyInfo.getComicPage());
+        }
+        else{
+
+        }
         if (!checkBoxIsVisible) {
             holder.checkBox.setVisibility(View.GONE);
-            holder.img.setOnClickListener(new View.OnClickListener() {
+            holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onComicHomeItemClick(position);
@@ -165,11 +177,13 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
             tv_name = (TextView) itemView.findViewById(R.id.tv_comic_name);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
             tv_type = (TextView) itemView.findViewById(R.id.tv_comic_type);
+            tv_history = (TextView)itemView.findViewById(R.id.historyComicTxt);
         }
 
         View container;
         ImageView img;
         TextView tv_name;
+        TextView tv_history;
         TextView tv_type;
         CheckBox checkBox;
     }

@@ -90,6 +90,7 @@ public class ChooseChapterActivity extends BaseActivity
         //传入漫画下章节的地址路径
         intent.putExtra("path", comicInfo.getComicPath());
         intent.putExtra("chapter",chapterList.get(position));
+        intent.putExtra("comic_name",comicInfo.getComicName());
         SkipUtil.skip(this,intent,false);
     }
 }

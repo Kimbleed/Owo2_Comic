@@ -7,12 +7,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.awesoman.owo2_comic.R;
+import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseSurfaceAdapter;
@@ -40,6 +43,7 @@ implements ChooseSurfaceAdapter.IChooseSurface{
     private String chapter;
     private String path;
     private List<String> pages;
+    private String mComicName;
     private Uri surfaceFile;
 
     @Override
@@ -50,6 +54,7 @@ implements ChooseSurfaceAdapter.IChooseSurface{
     @Override
     public void initView() {
         Bundle bundle = getIntent().getExtras();
+        mComicName = bundle.getString("comic_name");
         chapter = bundle.getString("chapter");
         path = bundle.getString("path");
         initRecyclerView();
@@ -85,15 +90,16 @@ implements ChooseSurfaceAdapter.IChooseSurface{
         intent.putExtra("outputX", 50);
         intent.putExtra("outputY", 50);
 
-//        surfaceFile = Uri.parse("file://"+"/"+path+File.separator+"surface.jpg");
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, surfaceFile);
-//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        surfaceFile = Uri.parse("file://"+"/"+ComicEntry.getComicPath()+mComicName+File.separator+"surface.jpg");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, surfaceFile);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         Log.i("surface","end");
         startActivityForResult(intent, 3);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(this,"回来啦",Toast.LENGTH_SHORT);
 //        if (requestCode == 3) {  //裁剪照片后处理
 //            switch (resultCode) {
 //                case Activity.RESULT_OK:
@@ -111,7 +117,7 @@ implements ChooseSurfaceAdapter.IChooseSurface{
 //                        Log.d("tag", "photo:" + photo.toString());
 //                        FileOutputStream b = null;
 //                        /*图片的保存路径*/
-//                        final String path = img_path/* + File.separator*/ + "head.jpg";
+//                        final String path = ComicEntry.getComicPath() + File.separator + mComicName + File.separator + "surface.jpg";
 //                        try {
 //                            b = new FileOutputStream(new File(path));
 //                            photo.compress(Bitmap.CompressFormat.JPEG, 100, b);
@@ -123,20 +129,14 @@ implements ChooseSurfaceAdapter.IChooseSurface{
 //                            // TODO Auto-generated catch block
 //                            e.printStackTrace();
 //                        } finally {
-//
-//                            try {
-//                                GoSave(path);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-////                            mIvMysettingImage.setImageBitmap(photo);
 //                        }
 //                    } else {
-//                        photo = BitmapFactory.decodeResource(getResources(), R.mipmap.default_user_img);
 //                    }
 //                    break;
 //
 //                case Activity.RESULT_CANCELED:// 取消
 //                    break;
-//    }
+//            }
+//        }
+    }
 }

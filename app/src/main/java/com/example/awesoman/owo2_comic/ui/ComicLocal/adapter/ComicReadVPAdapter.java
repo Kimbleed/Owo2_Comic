@@ -7,17 +7,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 import com.example.awesoman.owo2_comic.R;
-import com.example.awesoman.owo2_comic.utils.MyImageLoader;
 import com.example.awesoman.owo2_comic.view.ImageControl;
 
 import java.io.File;
@@ -52,12 +48,12 @@ public class ComicReadVPAdapter extends PagerAdapter {
     private int screenH;
     private int statusBarHeight;
 
-    private IDoubleClick listener;
+    private IComicReadVPListener comicReadVPListener;
 
 
 
-    public void setListener(IDoubleClick listener) {
-        this.listener = listener;
+    public void setComicReadVPListener(IComicReadVPListener comicReadVPListener) {
+        this.comicReadVPListener = comicReadVPListener;
     }
 
 
@@ -114,7 +110,7 @@ public class ComicReadVPAdapter extends PagerAdapter {
 
                             @Override
                             public void customMethod(Boolean currentStatus) {
-                                listener.doubleClick(view.isBig);
+                                comicReadVPListener.doubleClick(view.isBig);
                             }
                         });
 
@@ -123,6 +119,7 @@ public class ComicReadVPAdapter extends PagerAdapter {
         }.execute();
         container.addView(convertView);
         pageIndex = position;
+        comicReadVPListener.pageOn(pageIndex);
         tv_page_index.setText((pageIndex+1)+"");
 
         return convertView;
@@ -145,8 +142,9 @@ public class ComicReadVPAdapter extends PagerAdapter {
 
 
 
-    public interface IDoubleClick{
+    public interface IComicReadVPListener {
         void doubleClick(boolean isBig);
+        void pageOn(int pageIndex);
     }
 
 }

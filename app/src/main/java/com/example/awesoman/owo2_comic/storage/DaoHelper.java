@@ -6,9 +6,12 @@ package com.example.awesoman.owo2_comic.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.example.awesoman.owo2_comic.model.ComicHistoryInfo;
 import com.example.awesoman.owo2_comic.model.ComicInfo;
 import com.example.awesoman.owo2_comic.model.ComicTypeInfo;
+import com.example.awesoman.owo2_comic.model.MusicTriggerInfo;
 import com.example.awesoman.owo2_comic.utils.MyLogger;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -35,9 +38,11 @@ public class DaoHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, ComicInfo.class);
             TableUtils.createTable(connectionSource, ComicTypeInfo.class);
+            TableUtils.createTable(connectionSource, MusicTriggerInfo.class);
+            TableUtils.createTable(connectionSource, ComicHistoryInfo.class);
         }
         catch (Exception e){
-
+            Log.i("orm exception",e.getMessage());
         }
     }
 
