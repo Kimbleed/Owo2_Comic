@@ -20,11 +20,13 @@ import com.example.awesoman.owo2_comic.ui.BaseActivity;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseChapterAdapter;
 import com.example.awesoman.owo2_comic.ui.ComicLocal.adapter.ChooseSurfaceAdapter;
 import com.example.awesoman.owo2_comic.utils.FileManager;
+import com.example.awesoman.owo2_comic.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import butterknife.Bind;
@@ -84,13 +86,13 @@ implements ChooseSurfaceAdapter.IChooseSurface{
         intent.putExtra("crop", "true");
 
         // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
+        intent.putExtra("aspectX", 12);
+        intent.putExtra("aspectY", 15);
         // outputX outputY 是裁剪图片宽
-        intent.putExtra("outputX", 50);
-        intent.putExtra("outputY", 50);
+        intent.putExtra("outputX", 120);
+        intent.putExtra("outputY", 150);
 
-        surfaceFile = Uri.parse("file://"+"/"+ComicEntry.getComicPath()+mComicName+File.separator+"surface.jpg");
+        surfaceFile = Uri.parse("file://"+"/"+path+File.separator+"cache.jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, surfaceFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         Log.i("surface","end");
@@ -99,7 +101,14 @@ implements ChooseSurfaceAdapter.IChooseSurface{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(this,"回来啦",Toast.LENGTH_SHORT);
+        Log.i("surface","back");
+        if(requestCode == 3){
+            switch (resultCode){
+                case Activity.RESULT_OK:
+                    FileUtils.copyFile(path+File.separator+"cache.jpg",path+File.separator+"surface.jpg");
+                    break;
+            }
+        }
 //        if (requestCode == 3) {  //裁剪照片后处理
 //            switch (resultCode) {
 //                case Activity.RESULT_OK:

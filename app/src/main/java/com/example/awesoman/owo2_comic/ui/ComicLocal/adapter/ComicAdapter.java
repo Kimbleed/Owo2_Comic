@@ -110,7 +110,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
                 if (historyInfo != null) {
                     listener.onContinueClick(mData.get(position), historyInfo.getComicChapter(), historyInfo.getComicPage());
                 } else {
-                    listener.onContinueClick(mData.get(position),null,0);
+                    listener.onContinueClick(mData.get(position), null, 0);
                 }
             }
         });
@@ -144,27 +144,28 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         if (bitmap == null) {
             File fileDir = new File(mData.get(position).getComicPath());
             File[] dirs = fileDir.listFiles();
-            for (int i = 0; i < dirs.length; i++) {
-                boolean isMake = false;
-                if (dirs[i].isDirectory()) {
-                    File[] picts = dirs[i].listFiles();
-                    for (int j = 0; j < picts.length; j++) {
-                        if (FileUtils.judgePicOrVideo(picts[j]) == 2) {
-                            try {
-                                MyLogger.ddLog(TAG).i("makeSurface -- start");
-                                FileUtils.copyFile(picts[j].getAbsolutePath(), mData.get(position).getComicPath() + File.separator + "surface.jpg");
-                                MyLogger.ddLog(TAG).i("makeSurface -- end");
-                                isMake = true;
-                                break;
-                            } catch (Exception e) {
-                                e.printStackTrace();
+            if (dirs != null)
+                for (int i = 0; i < dirs.length; i++) {
+                    boolean isMake = false;
+                    if (dirs[i].isDirectory()) {
+                        File[] picts = dirs[i].listFiles();
+                        for (int j = 0; j < picts.length; j++) {
+                            if (FileUtils.judgePicOrVideo(picts[j]) == 2) {
+                                try {
+                                    MyLogger.ddLog(TAG).i("makeSurface -- start");
+                                    FileUtils.copyFile(picts[j].getAbsolutePath(), mData.get(position).getComicPath() + File.separator + "surface.jpg");
+                                    MyLogger.ddLog(TAG).i("makeSurface -- end");
+                                    isMake = true;
+                                    break;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
+                        if (isMake)
+                            break;
                     }
-                    if (isMake)
-                        break;
                 }
-            }
         }
         bitmap = comicDBManager.getSurface(mData.get(position).getComicPath());
         holder.img.setImageBitmap(comicDBManager.makeSurface(bitmap, context.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width), context.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
