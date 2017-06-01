@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -87,8 +88,6 @@ public class ComicReadActivity extends BaseActivity
         chapter = bundle.getString("chapter");
         mComicInfo = (ComicInfo)bundle.get("comic_info");
 
-        rememberHistory(0);
-
         ////右翻页    阅读模式---------------开始
         comicReadVPAdapter = new ComicReadVPAdapter(this);
 
@@ -123,11 +122,27 @@ public class ComicReadActivity extends BaseActivity
 
             @Override
             public void pageOn(int pageIndex) {
-                rememberHistory(pageIndex);
+//                rememberHistory(pageIndex);
             }
         });
 
         vp_read.setAdapter(comicReadVPAdapter);
+        vp_read.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                rememberHistory(position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         vp_read.setListener(this);
         //右翻页    阅读模式---------------结束
 
@@ -141,6 +156,9 @@ public class ComicReadActivity extends BaseActivity
         comicReadRVAdapter.setChapterPath(chapterPath);
         comicReadRVAdapter.setPages(pages);
         rv_read.setAdapter(comicReadRVAdapter);
+        ComicHistoryInfo historyInfo = comicHistoryDao.get(mComicInfo.getComicName());
+        if(historyInfo!=null)
+            vp_read.setCurrentItem(historyInfo.getComicPage());
 
         //上下滚动  阅读模式---------------结束
 

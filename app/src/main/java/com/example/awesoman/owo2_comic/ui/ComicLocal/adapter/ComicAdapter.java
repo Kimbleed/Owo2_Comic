@@ -97,13 +97,23 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         holder.tv_name.setText(mData.get(position).getComicName());
         holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(mData.get(position).getComicType()));
         holder.checkBox.setChecked(checkBoxList.get(position));
-        ComicHistoryInfo historyInfo =mComicHistoryDao.get(mData.get(position).getComicName());
-        if(historyInfo!=null) {
-            holder.tv_history.setText(historyInfo.getComicChapter() + "||" + historyInfo.getComicPage());
-        }
-        else{
+
+        final ComicHistoryInfo historyInfo = mComicHistoryDao.get(mData.get(position).getComicName());
+        if (historyInfo != null) {
+            holder.tv_history.setText("续看:" + historyInfo.getComicChapter() + " - " + (historyInfo.getComicPage() + 1) + "页");
+        } else {
 
         }
+        holder.continuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (historyInfo != null) {
+                    listener.onContinueClick(mData.get(position), historyInfo.getComicChapter(), historyInfo.getComicPage());
+                } else {
+                    listener.onContinueClick(mData.get(position),null,0);
+                }
+            }
+        });
         if (!checkBoxIsVisible) {
             holder.checkBox.setVisibility(View.GONE);
             holder.container.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +152,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
                         if (FileUtils.judgePicOrVideo(picts[j]) == 2) {
                             try {
                                 MyLogger.ddLog(TAG).i("makeSurface -- start");
-                                FileUtils.copyFile(picts[j].getAbsolutePath(),mData.get(position).getComicPath()+File.separator+"surface.jpg");
+                                FileUtils.copyFile(picts[j].getAbsolutePath(), mData.get(position).getComicPath() + File.separator + "surface.jpg");
                                 MyLogger.ddLog(TAG).i("makeSurface -- end");
                                 isMake = true;
                                 break;
@@ -151,7 +161,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
                             }
                         }
                     }
-                    if(isMake)
+                    if (isMake)
                         break;
                 }
             }
@@ -177,7 +187,8 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
             tv_name = (TextView) itemView.findViewById(R.id.tv_comic_name);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
             tv_type = (TextView) itemView.findViewById(R.id.tv_comic_type);
-            tv_history = (TextView)itemView.findViewById(R.id.historyComicTxt);
+            tv_history = (TextView) itemView.findViewById(R.id.historyComicTxt);
+            continuBtn = (ImageView) itemView.findViewById(R.id.readComicBtn);
         }
 
         View container;
@@ -186,9 +197,12 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         TextView tv_history;
         TextView tv_type;
         CheckBox checkBox;
+        ImageView continuBtn;
     }
 
     public interface IComicHome {
         void onComicHomeItemClick(int position);
+
+        void onContinueClick(ComicInfo info, String chapter, int page);
     }
 }

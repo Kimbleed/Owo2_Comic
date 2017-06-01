@@ -140,8 +140,6 @@ public class ComicReadVPAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-
-
     public interface IComicReadVPListener {
         void doubleClick(boolean isBig);
         void pageOn(int pageIndex);
