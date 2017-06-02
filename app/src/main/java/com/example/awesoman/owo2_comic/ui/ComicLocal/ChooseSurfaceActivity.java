@@ -86,8 +86,8 @@ implements ChooseSurfaceAdapter.IChooseSurface{
         intent.putExtra("crop", "true");
 
         // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 12);
-        intent.putExtra("aspectY", 15);
+        intent.putExtra("aspectX", 120);
+        intent.putExtra("aspectY", 150);
         // outputX outputY 是裁剪图片宽
         intent.putExtra("outputX", 120);
         intent.putExtra("outputY", 150);

@@ -8,6 +8,13 @@ import com.example.awesoman.owo2_comic.utils.FileManager;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.storage.ComicEntry;
 import com.example.awesoman.owo2_comic.utils.FileUtils;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import java.io.File;
 
@@ -26,6 +33,7 @@ public class MyApplication extends Application {
         context = getApplicationContext();
         fileManager = FileManager.getInstance();
         initDir();
+        initImageLoader();
 
 //        loadMusicFile();
     }
@@ -57,5 +65,27 @@ public class MyApplication extends Application {
     public void loadMusicFile(){
         FileUtils.copyFile(getResources().openRawResource(R.raw.someone_like_you),"someone_like_you.mp3", ComicEntry.getMusicPath());
         FileUtils.copyFile(getResources().openRawResource(R.raw.yui_how_crazy_2),"yui_how_crazy_2.mp3", ComicEntry.getMusicPath());
+    }
+
+    public void initImageLoader(){
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
+                .threadPoolSize(3) // default
+                .threadPriority(Thread.NORM_PRIORITY - 1) // default
+                .tasksProcessingOrder(QueueProcessingType.FIFO) // default
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCacheSizePercentage(13) // default
+                .discCacheSize(50 * 1024 * 1024)
+                .discCacheFileCount(100)
+                .discCacheFileNameGenerator(new Md5FileNameGenerator()) // default
+                .imageDownloader(new BaseImageDownloader(this)) // default
+                .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+                .writeDebugLogs()
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 }

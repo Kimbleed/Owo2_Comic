@@ -1,4 +1,4 @@
-package com.example.awesoman.owo2_comic.ui.ComicLocal.adapter;
+package com.example.awesoman.owo2_comic.ui.ComicOnline;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,16 +10,17 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.model.ComicHistoryInfo;
 import com.example.awesoman.owo2_comic.model.ComicInfo;
+import com.example.awesoman.owo2_comic.model.HttpComicInfo;
 import com.example.awesoman.owo2_comic.storage.ComicHistoryDao;
 import com.example.awesoman.owo2_comic.utils.FileManager;
-import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.utils.FileUtils;
 import com.example.awesoman.owo2_comic.utils.MyLogger;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
 
     public static final String Di = "第";
 
-    private List<ComicInfo> mData = new ArrayList<>();
+    private List<HttpComicInfo> mData = new ArrayList<>();
     private IComicHome listener;
     private FileManager comicDBManager;
     private Context context;
@@ -51,16 +52,6 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         comicDBManager = FileManager.getInstance();
         this.context = context;
         mComicHistoryDao = new ComicHistoryDao(context);
-    }
-
-    //获取 checkbox为ture的 漫画名List
-    public List<String> choseForDelete() {
-        List<String> choseForDelete = new ArrayList<>();
-        for (int i = 0; i < checkBoxList.size(); i++) {
-            if (checkBoxList.get(i))
-                choseForDelete.add(mData.get(i).getComicPath());
-        }
-        return choseForDelete;
     }
 
     //将checkBoxList中所有值置统一
@@ -82,11 +73,11 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
         notifyDataSetChanged();
     }
 
-    public List<ComicInfo> getmData() {
+    public List<HttpComicInfo> getmData() {
         return mData;
     }
 
-    public void setData(List<ComicInfo> mData) {
+    public void setData(List<HttpComicInfo> mData) {
         this.mData = mData;
     }
 
@@ -98,26 +89,10 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
 
     @Override
     public void onBindViewHolder(final ComicViewHolder holder, final int position) {
-        holder.tv_name.setText(mData.get(position).getComicName());
-        holder.tv_type.setText(FileManager.getInstance().getComicTypeNameById(mData.get(position).getComicType()));
+        holder.tv_name.setText(mData.get(position).getName());
+        holder.tv_type.setText((mData.get(position).getType()));
         holder.checkBox.setChecked(checkBoxList.get(position));
 
-        final ComicHistoryInfo historyInfo = mComicHistoryDao.get(mData.get(position).getComicName());
-        if (historyInfo != null) {
-            holder.tv_history.setText("续看:" + cutOutName(historyInfo.getComicChapter()) + " - " + (historyInfo.getComicPage() + 1) + "页");
-        } else {
-
-        }
-        holder.continuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (historyInfo != null) {
-                    listener.onContinueClick(mData.get(position), historyInfo.getComicChapter(), historyInfo.getComicPage());
-                } else {
-                    listener.onContinueClick(mData.get(position), null, 0);
-                }
-            }
-        });
         if (!checkBoxIsVisible) {
             holder.checkBox.setVisibility(View.GONE);
             holder.container.setOnClickListener(new View.OnClickListener() {
@@ -143,36 +118,8 @@ public class ComicAdapter extends RecyclerView.Adapter<ComicAdapter.ComicViewHol
             });
         }
 
-        //考虑用imageLoader替换/或glide
-        Bitmap bitmap = comicDBManager.getSurface(mData.get(position).getComicPath());
-        if (bitmap == null) {
-            File fileDir = new File(mData.get(position).getComicPath());
-            File[] dirs = fileDir.listFiles();
-            if (dirs != null)
-                for (int i = 0; i < dirs.length; i++) {
-                    boolean isMake = false;
-                    if (dirs[i].isDirectory()) {
-                        File[] picts = dirs[i].listFiles();
-                        for (int j = 0; j < picts.length; j++) {
-                            if (FileUtils.judgePicOrVideo(picts[j]) == 2) {
-                                try {
-                                    MyLogger.ddLog(TAG).i("makeSurface -- start");
-                                    FileUtils.copyFile(picts[j].getAbsolutePath(), mData.get(position).getComicPath() + File.separator + "surface.jpg");
-                                    MyLogger.ddLog(TAG).i("makeSurface -- end");
-                                    isMake = true;
-                                    break;
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                        if (isMake)
-                            break;
-                    }
-                }
-        }
-        bitmap = comicDBManager.getSurface(mData.get(position).getComicPath());
-        holder.img.setImageBitmap(comicDBManager.makeSurface(bitmap, context.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width), context.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height)));
+        ImageLoader.getInstance().displayImage(mData.get(position).getCoverImg(),holder.img);
+
     }
 
     @Override

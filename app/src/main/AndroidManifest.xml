@@ -32,6 +32,10 @@
         <activity android:name=".ui.ComicLocal.ChooseChapterActivity"/>
 
         <activity android:name=".ui.ComicLocal.ChooseSurfaceActivity"/>
+
+        <activity android:name=".ui.ComicOnline.ComicOnlineChapterActivity"/>
+
+        <activity android:name=".ui.ComicOnline.ComicOnlineReadActivity"/>
     </application>
 
 </manifest>

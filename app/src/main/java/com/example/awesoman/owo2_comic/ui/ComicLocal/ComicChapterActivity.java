@@ -37,10 +37,10 @@ public class ComicChapterActivity extends BaseActivity
     ImageView iv_bg;
     @Bind(R.id.chapter_container)
     RecyclerView chapterContainer;
+    FileManager comicDBManager;
+
     @Bind(R.id.ptr)
     PtrClassicFrameLayout ptrLayout;
-
-    FileManager comicDBManager;
     ComicInfo comicInfo;
     ComicChapterAdapter adapter;
 
@@ -53,7 +53,6 @@ public class ComicChapterActivity extends BaseActivity
         comicInfo = (ComicInfo) getIntent().getSerializableExtra("comicInfo");
         //实例化ComicDBManager
         comicDBManager = FileManager.getInstance();
-        showChapter();
         initPtr();
         setBg(widthImgBg, heightImgBg);
     }
