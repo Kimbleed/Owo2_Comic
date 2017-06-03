@@ -97,7 +97,7 @@ public class MusicFragment extends Fragment implements MusicAdapter.IMusicItem,V
 
         //获取音乐资源list
         fileManager = FileManager.getInstance();
-        musicList = fileManager.getNameListFromFile(ComicEntry.getMusicPath());
+        musicList = fileManager.getNameListFromFile(ComicEntry.getMusicPath(),false);
         adapter = new MusicAdapter(getContext());
         adapter.setData(musicList);
         adapter.setListener(this);

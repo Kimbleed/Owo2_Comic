@@ -16,7 +16,8 @@
                 android:background="@drawable/more_select_setting"
                 style="@style/MoreSelectImgStyle"  />
             <TextView
-                android:text="选项"
+                android:text="横屏阅读"
+                android:id="@+id/tv_read_direction"
                 style="@style/MoreSelectFontStyle"/>
         </LinearLayout>
         <LinearLayout
@@ -25,7 +26,8 @@
             <ImageView
                 style="@style/MoreSelectImgStyle" />
             <TextView
-                android:text="左手模式"
+                android:text="上下滚屏"
+                android:id="@+id/tv_read_mode"
                 style="@style/MoreSelectFontStyle" />
         </LinearLayout>
         <LinearLayout

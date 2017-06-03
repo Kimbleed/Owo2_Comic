@@ -30,7 +30,15 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
     private LayoutInflater inflater;
     private int pageIndex;
 
+    private IComicReadRVClick listener;
 
+    public IComicReadRVClick getListener() {
+        return listener;
+    }
+
+    public void setListener(IComicReadRVClick listener) {
+        this.listener = listener;
+    }
 
     public ComicReadRVAdapter(Context CTX) {
         this.CTX = CTX;
@@ -55,7 +63,7 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_comic_read_list,null);
+        View view = inflater.inflate(R.layout.item_comic_read_list2,null);
         return new MyViewHolder(view);
     }
 
@@ -76,6 +84,12 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
                 holder.imageView.setImageBitmap(bitmap);
             }
         }.execute();
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onComicReadRvItemClick();
+            }
+        });
         holder.tv_page_index.setText((position+1)+"");
         pageIndex = position;
     }
@@ -95,4 +109,8 @@ public class ComicReadRVAdapter extends RecyclerView.Adapter<ComicReadRVAdapter.
         TextView tv_page_index;
     }
 
+
+    public interface IComicReadRVClick{
+        void onComicReadRvItemClick();
+    }
 }

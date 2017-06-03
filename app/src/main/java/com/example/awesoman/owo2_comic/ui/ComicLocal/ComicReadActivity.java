@@ -4,13 +4,16 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -41,7 +44,7 @@ import butterknife.OnClick;
  */
 
 public class ComicReadActivity extends BaseActivity
-        implements ReadComicViewPager.IMyViewPager, View.OnClickListener {
+        implements ReadComicViewPager.IMyViewPager, View.OnClickListener ,ComicReadRVAdapter.IComicReadRVClick{
     @Bind(R.id.vp_read)
     ReadComicViewPager vp_read;
     @Bind(R.id.rv_read)
@@ -54,6 +57,10 @@ public class ComicReadActivity extends BaseActivity
     ImageView backBtn;
     @Bind(R.id.titleTxt)
     TextView titleTxt;
+    @Bind(R.id.tv_read_mode)
+    TextView tv_read_mode;
+    @Bind(R.id.tv_read_direction)
+    TextView tv_read_direction;
 
 
     @Bind(R.id.changeLinear)
@@ -68,10 +75,14 @@ public class ComicReadActivity extends BaseActivity
     private String chapter;
     private ComicInfo mComicInfo ;
     private boolean isInVisible;
+    private long ctm;
+
 
     public static final int READ_MODE_PAGING_RIGHT = 1;
     public static final int READ_MODE_PAGING_LEFT = 2;
     public static final int READ_MODE_ROLL = 3;
+
+    private boolean isShu = true;
 
     private ComicHistoryDao comicHistoryDao;
 
@@ -82,6 +93,7 @@ public class ComicReadActivity extends BaseActivity
 
     @Override
     public void initView() {
+
         comicHistoryDao = new ComicHistoryDao(this);
         Bundle bundle = getIntent().getExtras();
         String path = bundle.getString("path");
@@ -155,6 +167,7 @@ public class ComicReadActivity extends BaseActivity
         comicReadRVAdapter = new ComicReadRVAdapter(ComicReadActivity.this);
         comicReadRVAdapter.setChapterPath(chapterPath);
         comicReadRVAdapter.setPages(pages);
+        comicReadRVAdapter.setListener(this);
         rv_read.setAdapter(comicReadRVAdapter);
         ComicHistoryInfo historyInfo = comicHistoryDao.get(mComicInfo.getComicName());
         if(historyInfo!=null)
@@ -177,6 +190,11 @@ public class ComicReadActivity extends BaseActivity
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onComicReadRvItemClick() {
+        showOrHideMoreSelect();
     }
 
     @Override
@@ -203,12 +221,35 @@ public class ComicReadActivity extends BaseActivity
 
     @OnClick(R.id.changeLinear)
     public void showReadModeDialog() {
-        changeReadMode(READ_MODE_ROLL, comicReadVPAdapter.getPageIndex());
+        if(rv_read.getVisibility() == View.INVISIBLE || rv_read.getVisibility() == View.GONE) {
+            tv_read_mode.setText("左右翻页");
+            changeReadMode(READ_MODE_ROLL, comicReadVPAdapter.getPageIndex());
+        }
+        else if(vp_read.getVisibility() == View.INVISIBLE || vp_read.getVisibility() == View.GONE){
+            tv_read_mode.setText("上下滚屏");
+            changeReadMode(READ_MODE_PAGING_RIGHT, comicReadRVAdapter.getPageIndex());
+        }
     }
 
     @OnClick(R.id.saveLinear)
     public void savePict(){
 
+    }
+    @OnClick(R.id.settingLinear)
+    public void setting(){
+        if(isShu) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置成全屏模式
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//强制为横屏
+            tv_read_direction.setText("竖屏阅读");
+            isShu = false;
+
+        }
+        else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置成全屏模式
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+            tv_read_direction.setText("横屏阅读");
+            isShu = true;
+        }
     }
 
     public void showOrHideMoreSelect() {
@@ -305,7 +346,10 @@ public class ComicReadActivity extends BaseActivity
 
     public void changeReadMode(int mode, final int pageIndex) {
         if (mode == READ_MODE_PAGING_RIGHT) {
-
+            vp_read.setCurrentItem(pageIndex-1);
+            rv_read.setVisibility(View.GONE);
+            vp_read.setVisibility(View.VISIBLE);
+            showOrHideMoreSelect();
         } else if (mode == READ_MODE_PAGING_LEFT) {
 
         } else if (mode == READ_MODE_ROLL) {
@@ -333,5 +377,13 @@ public class ComicReadActivity extends BaseActivity
             historyInfo.setComicName(mComicInfo.getComicName());
             comicHistoryDao.add(historyInfo);
         }
+    }
+
+    public void showSetMusicDialoge(){
+
+    }
+
+    public void setMusic(){
+
     }
 }

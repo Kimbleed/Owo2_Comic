@@ -59,18 +59,22 @@ public class FileManager {
      * 获取以该文件为根目录的漫画名(文件名)
      * return List<String>
      */
-    public ArrayList<String> getNameListFromFile(String path) {
+    public ArrayList<String> getNameListFromFile(String path,boolean isDirectory) {
         ArrayList<String> fileInRes = new ArrayList<>();
         File resDir = new File(path);
         if (!resDir.exists()) {
             resDir.mkdir();
         }
-        String[] arr = resDir.list();
+        File[] arr = resDir.listFiles();
         int length = 0;
         if (arr != null)
             length = arr.length;
         for (int i = 0; i < length; i++) {
-            fileInRes.add(arr[i]);
+            if(arr[i].isDirectory() && isDirectory)
+                fileInRes.add(arr[i].getName());
+            else if(!isDirectory){
+                fileInRes.add(arr[i].getName());
+            }
             LogUtil.i("getNameListFromFile", i + "|" + arr[i]);
         }
         return fileInRes;
@@ -133,8 +137,8 @@ public class FileManager {
      */
     public List<String> getComicNameListUnExist() {
         List<String> listFromDB = getComicNameListFromDB();
-        List<String> listInFile = getNameListFromFile(ComicEntry.getComicPath());
-        List<String> listUnExist = getNameListFromFile(ComicEntry.getComicPath());
+        List<String> listInFile = getNameListFromFile(ComicEntry.getComicPath(),true);
+        List<String> listUnExist = getNameListFromFile(ComicEntry.getComicPath(),true);
         if (listFromDB != null)
             for (String comicNameDB : listFromDB) {
                 for (String comicNameFile : listInFile) {

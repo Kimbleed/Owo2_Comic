@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,7 +72,8 @@ public class ComicOnlineFragment extends Fragment implements ComicAdapter.IComic
     }
 
     public void initRecycler(){
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+
         recycler_book.setLayoutManager(layoutManager);
 
         mComicAdapter = new ComicAdapter(getContext(),this);

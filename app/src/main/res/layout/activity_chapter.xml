@@ -12,6 +12,13 @@
         android:layout_height="400dp"
         android:scaleType="fitXY"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
+        android:layout_marginTop="300dp"
+        android:background="@color/grey_100"/>
+
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/ptr"
         android:layout_width="match_parent"

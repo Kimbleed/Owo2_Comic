@@ -89,10 +89,10 @@ implements ChooseSurfaceAdapter.IChooseSurface{
         intent.putExtra("aspectX", 120);
         intent.putExtra("aspectY", 150);
         // outputX outputY 是裁剪图片宽
-        intent.putExtra("outputX", 120);
-        intent.putExtra("outputY", 150);
+        intent.putExtra("outputX", 600);
+        intent.putExtra("outputY", 750);
 
-        surfaceFile = Uri.parse("file://"+"/"+path+File.separator+"cache.jpg");
+        surfaceFile = Uri.parse("file://"+"/"+path+File.separator+"surface.jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, surfaceFile);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         Log.i("surface","end");
@@ -102,13 +102,13 @@ implements ChooseSurfaceAdapter.IChooseSurface{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("surface","back");
-        if(requestCode == 3){
-            switch (resultCode){
-                case Activity.RESULT_OK:
-                    FileUtils.copyFile(path+File.separator+"cache.jpg",path+File.separator+"surface.jpg");
-                    break;
-            }
-        }
+//        if(requestCode == 3){
+//            switch (resultCode){
+//                case Activity.RESULT_OK:
+//                    FileUtils.copyFile(path+File.separator+"cache.jpg",path+File.separator+"surface.jpg");
+//                    break;
+//            }
+//        }
 //        if (requestCode == 3) {  //裁剪照片后处理
 //            switch (resultCode) {
 //                case Activity.RESULT_OK:

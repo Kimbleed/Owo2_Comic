@@ -45,6 +45,7 @@ public class ComicChapterActivity extends BaseActivity
     ComicChapterAdapter adapter;
 
     private int widthImgBg = 120, heightImgBg = 150;
+    private float scaleX ,scaleY;
     public static final String TAG = "ComicChapterActivity";
 
     @Override
@@ -53,6 +54,7 @@ public class ComicChapterActivity extends BaseActivity
         comicInfo = (ComicInfo) getIntent().getSerializableExtra("comicInfo");
         //实例化ComicDBManager
         comicDBManager = FileManager.getInstance();
+        showChapter();
         initPtr();
         setBg(widthImgBg, heightImgBg);
     }
@@ -104,7 +106,10 @@ public class ComicChapterActivity extends BaseActivity
         bitmap = comicDBManager.makeSurface(bitmap, DensityUtils.dip2px(CTX, dpWidth), DensityUtils.dip2px(CTX, dpHeight));
 //        bitmap = comicDBManager.makeSurface(bitmap,CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_width),CTX.getResources().getDimensionPixelSize(R.dimen.surface_comic_list_height));
         //模糊处理
-        iv_bg.setImageBitmap(FastBlur.doBlur(bitmap, 50, false));
+        iv_bg.setImageBitmap(FastBlur.doBlur(bitmap, 20, false));
+
+        scaleX = iv_bg.getScaleX();
+        scaleY = iv_bg.getScaleY();
     }
 
     @Override
@@ -144,7 +149,9 @@ public class ComicChapterActivity extends BaseActivity
         head.setListener(new MyPtrHead.IPtrHeadListener() {
             @Override
             public void onDownMoveEvent(float percent) {
-                setBg(widthImgBg + ((int)(0.8*percent*100)),heightImgBg+((int)percent*100));
+//                setBg(widthImgBg + ((int)(0.8*percent*100)),heightImgBg+((int)percent*100));
+                iv_bg.setScaleX(scaleX+((int)(Math.sqrt(0.8*percent*60))));
+                iv_bg.setScaleY(scaleY+((int)(Math.sqrt(percent*60))));
             }
         });
         ptrLayout.setHeaderView(head);

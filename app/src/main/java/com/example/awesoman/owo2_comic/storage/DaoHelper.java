@@ -25,7 +25,7 @@ import com.j256.ormlite.table.TableUtils;
 public class DaoHelper extends OrmLiteSqliteOpenHelper {
     public static final String TAG = "DaoHelper";
 
-    private static final String DATABASE_NAME= "sqlite-loock.db";
+    private static final String DATABASE_NAME= "sqlite-owo2.db";
 
     private static final int VERSION = 1;
 
