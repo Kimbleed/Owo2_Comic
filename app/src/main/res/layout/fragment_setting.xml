@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_all_day"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_centerVertical="true"
+            android:text="开机扫描文件"
+            />
+
+      <!--  <com.example.awesoman.owo2_comic.view.ToggleButton
+            android:id="@+id/toggle_all_day"
+            android:layout_width="40dp"
+            android:layout_height="22dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            toggle:borderWidth="1dp"
+            toggle:offBorderColor="#c0c0c0"
+            toggle:offColor="#FF8C00"
+            toggle:onColor="@color/colorLock"
+            toggle:spotColor="#FFFFFF"
+            toggle:toggleOn="true" />-->
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/rl_gps_msg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView android:id="@+id/tv_geo_hint"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="清空缓存" />
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/icon_right_arrow"/>
+
+    </LinearLayout>
+</LinearLayout>

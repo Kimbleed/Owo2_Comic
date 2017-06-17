@@ -74,5 +74,8 @@ public class DiscView  extends View {
         dst. right = widthScreen/2+rDisc;
         dst. bottom = heightScreen;
         canvas.drawBitmap(bitmap,src,dst,mPaint);
+
+        mPaint.setColor(Color.WHITE);
+        canvas.drawCircle(widthScreen/2,heightScreen/2,20,mPaint);
     }
 }

@@ -59,7 +59,7 @@ public class FileManager {
      * 获取以该文件为根目录的漫画名(文件名)
      * return List<String>
      */
-    public ArrayList<String> getNameListFromFile(String path,boolean isDirectory) {
+    public ArrayList<String> getNameListFromFile(String path, boolean isDirectory) {
         ArrayList<String> fileInRes = new ArrayList<>();
         File resDir = new File(path);
         if (!resDir.exists()) {
@@ -70,9 +70,9 @@ public class FileManager {
         if (arr != null)
             length = arr.length;
         for (int i = 0; i < length; i++) {
-            if(arr[i].isDirectory() && isDirectory)
+            if (arr[i].isDirectory() && isDirectory)
                 fileInRes.add(arr[i].getName());
-            else if(!isDirectory){
+            else if (!isDirectory) {
                 fileInRes.add(arr[i].getName());
             }
             LogUtil.i("getNameListFromFile", i + "|" + arr[i]);
@@ -137,8 +137,8 @@ public class FileManager {
      */
     public List<String> getComicNameListUnExist() {
         List<String> listFromDB = getComicNameListFromDB();
-        List<String> listInFile = getNameListFromFile(ComicEntry.getComicPath(),true);
-        List<String> listUnExist = getNameListFromFile(ComicEntry.getComicPath(),true);
+        List<String> listInFile = getNameListFromFile(ComicEntry.getComicPath(), true);
+        List<String> listUnExist = getNameListFromFile(ComicEntry.getComicPath(), true);
         if (listFromDB != null)
             for (String comicNameDB : listFromDB) {
                 for (String comicNameFile : listInFile) {
@@ -369,6 +369,7 @@ public class FileManager {
      */
     public List<ComicInfo> getComicMenuFromDB(int type) {
         List<ComicInfo> data = mComicInfoDao.queryForAll();
+        List<ComicInfo> typeList = new ArrayList<>();
 //        SQLiteOpenHelper sqLiteOpenHelper = new MySQLiteHelper(MyApplication.getContext());
 //        SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
 //        String sql = "select * from "+ ComicEntry.COMIC_ALL_TABLE_NAME;
@@ -393,11 +394,15 @@ public class FileManager {
 //            Log.i("getComicMenu_"+i,data.get(i).getComicName()+"|"+data.get(i).getComicPath());
 //        }
 
-        for (ComicInfo info : data) {
-            if (info.getComicType() != type && type!=1)
-                data.remove(info);
-        }
-        return data;
+        if (data != null && data.size()>0)
+            for (ComicInfo info : data) {
+                if (info.getComicType() == type && type != 1)
+                    typeList.add(info);
+                else if(type == 1){
+                    return data;
+                }
+            }
+        return typeList;
     }
 
 

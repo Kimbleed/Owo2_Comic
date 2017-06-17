@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 case 3:
                     if (fragments[3] == null)
                         fragments[3] = new SettingFragment();
-                    return new SettingFragment();
+                    return fragments[3];
             }
             return null;
         }

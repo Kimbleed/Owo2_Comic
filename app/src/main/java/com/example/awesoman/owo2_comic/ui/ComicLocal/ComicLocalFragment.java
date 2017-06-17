@@ -441,7 +441,9 @@ public class ComicLocalFragment extends Fragment
         typeTxt.setText(comicTypeList.get(position).getComicTypeName());
         comicType = position;
         comicHomeList.clear();
-        comicHomeList.addAll(fileManager.getComicMenuFromDB(comicTypeList.get(position).getComicTypeNo()));
+        List<ComicInfo> list = fileManager.getComicMenuFromDB(comicTypeList.get(position).getComicTypeNo());
+        if(list !=null)
+            comicHomeList.addAll(list);
         comicHomeAdapter.notifyDataSetChanged();
 
     }
@@ -451,35 +453,6 @@ public class ComicLocalFragment extends Fragment
      * 弹出添加漫画种类Dialog
      */
     public void initAddTypeNameDialog() {
-/*        addTypeDialog = new AlertDialog.Builder(getContext()).create();
-        Window window = addTypeDialog.getWindow();
-        window.setContentView(R.layout.dialog_add_comic_type);
-        Button btnOk = (Button)window.findViewById(R.id.btn_ok);
-        Button btnCancel = (Button)window.findViewById(R.id.btn_cancel);
-        addComicTypeEditTxt = (EditText)window.findViewById(R.id.addComicTypeEditTxt);
-        View.OnClickListener dialogClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int id = v.getId();
-                switch (id){
-                    case R.id.btn_ok:
-                        fileManager.addComicType(addComicTypeEditTxt.getText().toString());
-                        comicTypeList = fileManager.getComicTypeFromDB();
-                        comicTypeAdapter.setData(comicTypeList);
-                        comicTypeAdapter.notifyDataSetChanged();
-                        initAddComicInToTypeDialog(addComicTypeEditTxt.getText().toString());
-//                        comicTypeRV.scro
-                    case R.id.btn_cancel:
-                        addTypeDialog.dismiss();
-                        break;
-                }
-            }
-        };
-        btnOk.setOnClickListener(dialogClickListener);
-        btnCancel.setOnClickListener(dialogClickListener);
-        StringUtils.showInputMethod(getContext(),addComicTypeEditTxt);
-        addTypeDialog.show();*/
-
 
         addTypeDialog = new Dialog(getContext(), R.style.customDialog);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

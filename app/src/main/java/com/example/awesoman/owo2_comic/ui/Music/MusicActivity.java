@@ -7,9 +7,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.awesoman.owo2_comic.view.DiscView;
 import com.example.awesoman.owo2_comic.view.DragProgressBar;
 import com.example.awesoman.owo2_comic.R;
 import com.example.awesoman.owo2_comic.ui.BaseActivity;
@@ -45,6 +48,8 @@ public class MusicActivity extends BaseActivity
     DragProgressBar dragProgressBar;
     @Bind(R.id.backBtn)
     ImageView backBtn;
+    @Bind(R.id.discview)
+    DiscView discView;
 
     private int duration = 0;
 
@@ -117,6 +122,12 @@ public class MusicActivity extends BaseActivity
                 } else {
                     musicStartBtn.setBackground(getResources().getDrawable(R.drawable.music_stop));
                     binder.playMusic(binder.getCurrentIndex());
+                    RotateAnimation animation = new RotateAnimation(0,360,discView.getWidth()/2,discView.getHeight()/2);
+                    animation.setDuration(20000);
+                    animation.setRepeatCount(100);
+                    animation.setInterpolator(new LinearInterpolator());
+                    discView.setAnimation(animation);
+                    animation.start();
 //                    sendMusicBroadcastMehtod("pause");
                 }
                 break;

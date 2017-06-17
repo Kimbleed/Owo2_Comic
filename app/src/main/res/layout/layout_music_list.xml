@@ -2,10 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    >
+    android:gravity="center">
+
     <LinearLayout
-        android:layout_width="250dp"
+        android:id="@+id/ll_add_comic_type"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_conner_white">
@@ -18,19 +21,10 @@
             android:gravity="center_horizontal"
             android:text="添加漫画类型" />
 
-        <LinearLayout
-            android:id="@+id/nowNoticeLinear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal" >
-
-            <ListView
-                android:id="@+id/comicChoseList"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"></ListView>
-        </LinearLayout>
+       <android.support.v7.widget.RecyclerView
+           android:id="@+id/recycler_music"
+           android:layout_width="match_parent"
+           android:layout_height="300dp"></android.support.v7.widget.RecyclerView>
 
         <TextView
             android:layout_width="match_parent"
@@ -68,4 +62,5 @@
 
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

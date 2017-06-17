@@ -56,6 +56,11 @@ public class ComicChapterActivity extends BaseActivity
         comicDBManager = FileManager.getInstance();
         showChapter();
         initPtr();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setBg(widthImgBg, heightImgBg);
     }
 

@@ -41,7 +41,6 @@ public class MyImageLoader {
         SoftReference<Bitmap> softBitmap = new SoftReference<Bitmap>(bitmap);
         imageCache.put(path,softBitmap);
     }
-
     //取出单张Bitmap
     public Bitmap getBitmapByPath(String path){
         //从缓存中取软引用的Bitmap对象
